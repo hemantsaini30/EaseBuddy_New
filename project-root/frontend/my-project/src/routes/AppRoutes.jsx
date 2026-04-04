@@ -9,6 +9,7 @@ import NotFound from "../pages/NotFound";
 import MockTest from "../pages/MockTest";
 import BookChapters from "../pages/BookChapters";  // NEW IMPORT
 import PerformanceDashboard from "../pages/PerformanceDashboard";
+import BookmarksPage from "../pages/Bookmarks";
 
 const AppRoutes = () => (
   <Routes>
@@ -27,6 +28,7 @@ const AppRoutes = () => (
 
     <Route path="/mock-test" element={<ProtectedRoute><MockTest /></ProtectedRoute>} />
     <Route path="/performance" element={<PerformanceDashboard />} />
+    <Route path="/bookmarks" element={<ProtectedRoute><BookmarksPage /></ProtectedRoute>}/>
 
     {/* 404 */}
     <Route path="*" element={<NotFound />} />

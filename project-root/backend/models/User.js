@@ -34,6 +34,19 @@ const userSchema = new mongoose.Schema(
     },
     school: { type: String, default: "" },
     streak: { type: Number, default: 0 },
+    bookmarks: [
+      {
+        chapterId:    { type: mongoose.Schema.Types.ObjectId, ref: "Chapter" },
+        chapterTitle: { type: String },
+        subject:      { type: String },
+        classLevel:   { type: Number },
+        slug:         { type: String },
+        bookName:     { type: String, default: null }, // for English/Hindi/SST
+        bookId:       { type: String, default: null },
+        subjectId:    { type: String },               // e.g. "social-science"
+        addedAt:      { type: Date, default: Date.now },
+      },
+    ],
     lastActiveDate: { type: Date, default: Date.now },
     role: { type: String, enum: ["student", "admin"], default: "student" },
   },

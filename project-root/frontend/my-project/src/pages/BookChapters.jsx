@@ -7,6 +7,7 @@ import { BOOKS, BOOK_COLORS } from "../data/bookConfig";
 import { SUBJECTS } from "../utils/constants";
 import { useAuth } from "../context/AuthContext";
 import { useProgress } from "../hooks/useProgress";
+import BookmarkButton from "../components/common/BookmarkButton";
 
 const BookChapters = () => {
   const { subjectId, bookId } = useParams();
@@ -134,7 +135,7 @@ const BookChapters = () => {
                   }`}>
                   {isComplete ? "✓" : chapter.chapterNumber || idx + 1}
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="text-sm font-semibold text-gray-800 group-hover:text-indigo-600 dark:text-white">
                     {chapter.title}
                   </p>
@@ -144,6 +145,17 @@ const BookChapters = () => {
                     </p>
                   )}
                 </div>
+                <BookmarkButton
+                  chapterId={chapter._id}
+                  chapterTitle={chapter.title}
+                  subject={chapter.subject}
+                  classLevel={chapter.classLevel}
+                  slug={chapter.slug}
+                  subjectId={subjectId}                // already available from useParams
+                  bookName={book?.dbBook || null}      // from BookChapters only
+                  bookId={bookId}                      // from BookChapters only
+                  size="sm"
+                />
               </Link>
             );
           })}

@@ -1,8 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { SUBJECTS } from "../../utils/constants";
 import { useAuth } from "../../context/AuthContext";
+import { useBookmarks } from "../../context/BookmarkContext";
+
 
 const Sidebar = ({ isOpen, onClose, chapters = [], activeSubject = null }) => {
+  const { bookmarks } = useBookmarks();
   const { user } = useAuth();
 
   return (
@@ -79,6 +82,25 @@ const Sidebar = ({ isOpen, onClose, chapters = [], activeSubject = null }) => {
             >
               <span className="text-xl">📊</span>
               Performance
+            </NavLink>
+            <NavLink
+              to="/bookmarks"
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                ${isActive
+                  ? "bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400"
+                  : "text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800"
+                }`
+              }
+            >
+              <span className="text-xl">🔖</span>
+              Bookmarks
+              {/* Live count badge */}
+              {bookmarks.length > 0 && (
+                <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900 dark:text-amber-300">
+                  {bookmarks.length}
+                </span>
+              )}
             </NavLink>
           </div>
 

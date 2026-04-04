@@ -12,6 +12,8 @@ const progressRoutes = require("./routes/progressRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const mockTestRoutes = require("./routes/mockTestRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
+const bookmarkRoutes = require("./routes/bookmarkRoutes");
+const formulaRoutes = require("./routes/formulaRoutes");
 
 
 dotenv.config();
@@ -32,6 +34,8 @@ app.use("/api/progress", progressRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/mock-test", mockTestRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/bookmarks", bookmarkRoutes);
+app.use("/api/formulas", formulaRoutes);
 
 
 // Health check
