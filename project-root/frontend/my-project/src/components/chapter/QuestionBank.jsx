@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import { useProgress } from "../../hooks/useProgress";
+
+
 
 const TEST_CONFIG = {
   easy:   { label: "Easy Test",   duration: 30 * 60, questions: 15, color: "green",  icon: "◎" },
@@ -84,12 +87,14 @@ const ResultScreen = ({ score, total, level, onRetake, onBack }) => {
 };
 
 // ── Active quiz screen ────────────────────────────────────
-const QuizScreen = ({ questions, level, onFinish }) => {
+const QuizScreen = ({ questions, level, onFinish, chapterId, subject, classLevel  }) => {
   const cfg = TEST_CONFIG[level];
   const c   = COLOR[cfg.color];
   const [current, setCurrent]   = useState(0);
   const [answers, setAnswers]   = useState({});
   const [submitted, setSubmit]  = useState(false);
+
+  const { markSection } = useProgress();
 
   const handleExpire = () => setSubmit(true);
   const { display, timeLeft } = useTimer(cfg.duration, handleExpire);
@@ -97,6 +102,13 @@ const QuizScreen = ({ questions, level, onFinish }) => {
   const q = questions[current];
   const timePct = (timeLeft / cfg.duration) * 100;
   const score = questions.reduce((a, q, i) => a + (answers[i] === q.mcqCorrectIndex ? 1 : 0), 0);
+
+  const handleSubmit = async () => {
+  setSubmit(true);
+
+  // Save MCQ score to backend
+  await markSection(chapterId, subject, classLevel, "mcq", score, questions.length);
+  };
 
   if (submitted) {
     return (
@@ -190,7 +202,7 @@ const QuizScreen = ({ questions, level, onFinish }) => {
             Next →
           </button>
         ) : (
-          <button onClick={() => setSubmit(true)}
+          <button onClick={handleSubmit}
             className={`rounded-xl px-4 py-2 text-sm font-semibold ${c.btn}`}>
             Submit
           </button>
@@ -201,7 +213,7 @@ const QuizScreen = ({ questions, level, onFinish }) => {
 };
 
 // ── Test selection cards (landing screen) ─────────────────
-const QuestionBank = ({ questions = [] }) => {
+const QuestionBank = ({ questions = [], chapterId, subject, classLevel }) => {
   const [activeTest, setActiveTest] = useState(null);
 
   if (!questions.length) {
@@ -223,6 +235,9 @@ const QuestionBank = ({ questions = [] }) => {
         questions={grouped[activeTest].slice(0, TEST_CONFIG[activeTest].questions)}
         level={activeTest}
         onFinish={() => setActiveTest(null)}
+        chapterId={chapterId}
+        subject={subject}
+        classLevel={classLevel}
       />
     );
   }

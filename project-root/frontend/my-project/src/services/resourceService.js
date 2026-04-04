@@ -1,5 +1,6 @@
 import api from "./api";
 
+
 export const resourceService = {
   /** Fetch all chapters for a subject + class */
   getChapters: async (subject, classLevel, book = null) => {
@@ -40,12 +41,13 @@ export const resourceService = {
    * @param {number} classLevel
    * @param {string} section - "video" | "ncert" | "pyq" | "book" | "mcq"
    */
-  markSectionComplete: async (chapterId, subject, classLevel, section) => {
+  markSectionComplete: async (chapterId, subject, classLevel, section, mcqScore = undefined) => {
     const { data } = await api.put("/progress/mark-section", {
       chapterId,
       subject,
       classLevel,
       section,
+       ...(mcqScore !== undefined && { mcqScore }),
     });
     return data.data;
   },

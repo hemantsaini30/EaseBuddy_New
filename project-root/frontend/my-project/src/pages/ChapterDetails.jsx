@@ -121,7 +121,9 @@ const ChapterDetails = () => {
             )}
           </div>
         )}
-        {activeTab === "mcq" && <QuestionBank questions={byType("mcq")} />}
+        {activeTab === "mcq" && <QuestionBank questions={byType("mcq")} chapterId={chapter._id}
+  subject={chapter.subject}
+  classLevel={chapter.classLevel} />}
 
         {/* Mark section complete button */}
         {!progress?.completedSections?.[activeTab] && (

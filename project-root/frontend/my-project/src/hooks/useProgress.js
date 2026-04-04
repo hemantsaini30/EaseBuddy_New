@@ -28,13 +28,15 @@ export const useProgress = () => {
     return id != null && String(id) === String(chapterId);
   };
 
-  const markSection = async (chapterId, subject, classLevel, section) => {
+  const markSection = async (chapterId, subject, classLevel, section, mcqScore, mcqTotal) => {
     try {
       const updated = await resourceService.markSectionComplete(
         chapterId,
         subject,
         classLevel,
-        section
+        section,
+        mcqScore,
+        mcqTotal
       );
       setProgress((prev) => {
         const idx = prev.findIndex((p) => sameChapter(p, chapterId));

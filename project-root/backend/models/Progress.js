@@ -22,6 +22,8 @@ const progressSchema = new mongoose.Schema(
       pyq: { type: Boolean, default: false },
       book: { type: Boolean, default: false },
       mcq: { type: Boolean, default: false },
+
+
     },
     isChapterComplete: { type: Boolean, default: false },
 

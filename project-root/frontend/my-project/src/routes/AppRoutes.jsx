@@ -8,7 +8,7 @@ import ChapterDetails from "../pages/ChapterDetails";
 import NotFound from "../pages/NotFound";
 import MockTest from "../pages/MockTest";
 import BookChapters from "../pages/BookChapters";  // NEW IMPORT
-
+import PerformanceDashboard from "../pages/PerformanceDashboard";
 
 const AppRoutes = () => (
   <Routes>
@@ -26,6 +26,7 @@ const AppRoutes = () => (
     <Route path="/chapter/:slug" element={<ProtectedRoute><ChapterDetails /></ProtectedRoute>} />
 
     <Route path="/mock-test" element={<ProtectedRoute><MockTest /></ProtectedRoute>} />
+    <Route path="/performance" element={<PerformanceDashboard />} />
 
     {/* 404 */}
     <Route path="*" element={<NotFound />} />

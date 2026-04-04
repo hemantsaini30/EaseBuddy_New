@@ -11,6 +11,7 @@ const resourceRoutes = require("./routes/resourceRoutes");
 const progressRoutes = require("./routes/progressRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const mockTestRoutes = require("./routes/mockTestRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
 
 
 dotenv.config();
@@ -30,6 +31,8 @@ app.use("/api/resources", resourceRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/mock-test", mockTestRoutes);
+app.use("/api/analytics", analyticsRoutes);
+
 
 // Health check
 app.get("/api/health", (req, res) => res.json({ status: "OK", env: process.env.NODE_ENV }));

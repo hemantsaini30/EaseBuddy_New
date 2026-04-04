@@ -26,11 +26,15 @@ const markSectionComplete = asyncHandler(async (req, res) => {
   }
 
   // Mark the section
-  progress.completedSections[section] = true;
+  progress.set(`completedSections.${section}`, true);
+  if (section === "mcq" && req.body.mcqScore !== undefined) {
+  progress.lastMCQScore = req.body.mcqScore;
+  
+  }
 
   // Check if all 5 sections are done
-  const sections = Object.values(progress.completedSections);
-  progress.isChapterComplete = sections.every(Boolean);
+  const { video, ncert, pyq, book, mcq } = progress.completedSections;
+  progress.isChapterComplete = [video, ncert, pyq, book, mcq].every(Boolean);
 
   await progress.save();
 

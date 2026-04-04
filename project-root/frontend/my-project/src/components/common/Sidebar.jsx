@@ -67,6 +67,19 @@ const Sidebar = ({ isOpen, onClose, chapters = [], activeSubject = null }) => {
               <span className="text-xl">📝</span>
               Mock Test
             </NavLink>
+            <NavLink
+              to="/performance"
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                ${isActive
+                  ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400"
+                  : "text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800"
+                }`
+              }
+            >
+              <span className="text-xl">📊</span>
+              Performance
+            </NavLink>
           </div>
 
           {/* Chapter list (shown when a subject is selected) */}
