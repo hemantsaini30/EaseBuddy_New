@@ -47,6 +47,7 @@ const userSchema = new mongoose.Schema(
         addedAt:      { type: Date, default: Date.now },
       },
     ],
+    
     lastActiveDate: { type: Date, default: Date.now },
     role: { type: String, enum: ["student", "admin"], default: "student" },
   },

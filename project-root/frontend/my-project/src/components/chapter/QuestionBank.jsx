@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useProgress } from "../../hooks/useProgress";
-
-
+import { useMistakes } from "../../context/MistakeContext";
 
 const TEST_CONFIG = {
   easy:   { label: "Easy Test",   duration: 30 * 60, questions: 15, color: "green",  icon: "◎" },
@@ -51,22 +49,26 @@ const useTimer = (initialSeconds, onExpire) => {
     return () => clearInterval(ref.current);
   }, []);
 
-  const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+  const fmt = (s) =>
+    `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
   return { timeLeft, display: fmt(timeLeft) };
 };
 
 // ── Result screen ─────────────────────────────────────────
 const ResultScreen = ({ score, total, level, onRetake, onBack }) => {
   const cfg = TEST_CONFIG[level];
-  const c = COLOR[cfg.color];
+  const c   = COLOR[cfg.color];
   const pct = Math.round((score / total) * 100);
-  const grade = pct >= 80 ? "Excellent!" : pct >= 60 ? "Good effort!" : "Keep practicing!";
+  const grade =
+    pct >= 80 ? "Excellent!" : pct >= 60 ? "Good effort!" : "Keep practicing!";
 
   return (
     <div className="flex flex-col items-center gap-6 py-8">
       <div className={`flex h-28 w-28 items-center justify-center rounded-full border-4 ${c.ring}`}>
         <div className="text-center">
-          <p className="text-3xl font-black text-gray-900 dark:text-white">{score}/{total}</p>
+          <p className="text-3xl font-black text-gray-900 dark:text-white">
+            {score}/{total}
+          </p>
           <p className={`text-sm font-semibold ${c.text}`}>{pct}%</p>
         </div>
       </div>
@@ -75,10 +77,16 @@ const ResultScreen = ({ score, total, level, onRetake, onBack }) => {
         <p className="text-sm text-gray-500">{cfg.label} completed</p>
       </div>
       <div className="flex gap-3">
-        <button onClick={onRetake} className={`rounded-xl px-5 py-2 text-sm font-semibold ${c.btn}`}>
+        <button
+          onClick={onRetake}
+          className={`rounded-xl px-5 py-2 text-sm font-semibold ${c.btn}`}
+        >
           Retake Test
         </button>
-        <button onClick={onBack} className="rounded-xl border border-gray-300 px-5 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300">
+        <button
+          onClick={onBack}
+          className="rounded-xl border border-gray-300 px-5 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300"
+        >
           Back to Tests
         </button>
       </div>
@@ -87,28 +95,60 @@ const ResultScreen = ({ score, total, level, onRetake, onBack }) => {
 };
 
 // ── Active quiz screen ────────────────────────────────────
-const QuizScreen = ({ questions, level, onFinish, chapterId, subject, classLevel  }) => {
+const QuizScreen = ({ questions, level, onFinish, chapterId, subject, classLevel }) => {
   const cfg = TEST_CONFIG[level];
   const c   = COLOR[cfg.color];
-  const [current, setCurrent]   = useState(0);
-  const [answers, setAnswers]   = useState({});
-  const [submitted, setSubmit]  = useState(false);
 
-  const { markSection } = useProgress();
+  const [current,   setCurrent]   = useState(0);
+  const [answers,   setAnswers]   = useState({});
+  const [submitted, setSubmitted] = useState(false);  // ← defined HERE in QuizScreen
 
-  const handleExpire = () => setSubmit(true);
+  // get saveQuizMistakes from context
+  const { saveQuizMistakes } = useMistakes();
+
+  // ── Submit handler — defined inside QuizScreen so setSubmitted is in scope ──
+  const handleSubmit = async () => {
+    setSubmitted(true); // ← now this works because setSubmitted is in the same scope
+
+    // Collect wrong + skipped questions
+    const toSave = questions
+      .map((q, i) => {
+        const userAns   = answers[i];
+        const isCorrect = userAns === q.mcqCorrectIndex;
+        const skipped   = userAns === undefined;
+        if (isCorrect) return null; // correct — skip
+
+        return {
+          resourceId:      q._id,
+          chapterId:       chapterId || q.chapterId,
+          chapterTitle:    q.chapterTitle || "Unknown Chapter",
+          subject:         subject       || q.subject || "Unknown",
+          classLevel:      classLevel    || q.classLevel || 10,
+          question:        q.mcqQuestion,
+          options:         q.mcqOptions,
+          correctIndex:    q.mcqCorrectIndex,
+          explanation:     q.mcqExplanation || "",
+          difficulty:      q.testLevel      || "medium",
+          userAnswerIndex: skipped ? -1 : userAns,
+          addedReason:     skipped ? "skipped" : "wrong",
+        };
+      })
+      .filter(Boolean);
+
+    if (toSave.length) {
+      await saveQuizMistakes(toSave);
+    }
+  };
+
+  // Auto-submit when timer expires
+  const handleExpire = () => handleSubmit();
   const { display, timeLeft } = useTimer(cfg.duration, handleExpire);
 
-  const q = questions[current];
+  const q       = questions[current];
   const timePct = (timeLeft / cfg.duration) * 100;
-  const score = questions.reduce((a, q, i) => a + (answers[i] === q.mcqCorrectIndex ? 1 : 0), 0);
-
-  const handleSubmit = async () => {
-  setSubmit(true);
-
-  // Save MCQ score to backend
-  await markSection(chapterId, subject, classLevel, "mcq", score, questions.length);
-  };
+  const score   = questions.reduce(
+    (a, q, i) => a + (answers[i] === q.mcqCorrectIndex ? 1 : 0), 0
+  );
 
   if (submitted) {
     return (
@@ -116,7 +156,7 @@ const QuizScreen = ({ questions, level, onFinish, chapterId, subject, classLevel
         score={score}
         total={questions.length}
         level={level}
-        onRetake={() => { setAnswers({}); setSubmit(false); setCurrent(0); }}
+        onRetake={() => { setAnswers({}); setSubmitted(false); setCurrent(0); }}
         onBack={() => onFinish()}
       />
     );
@@ -130,12 +170,16 @@ const QuizScreen = ({ questions, level, onFinish, chapterId, subject, classLevel
           <span className={`rounded-full px-3 py-1 text-xs font-semibold ${c.badge}`}>
             {cfg.label}
           </span>
-          <span className="text-sm text-gray-500">{current + 1} / {questions.length}</span>
+          <span className="text-sm text-gray-500">
+            {current + 1} / {questions.length}
+          </span>
         </div>
         {/* Timer */}
-        <div className={`flex items-center gap-2 rounded-xl border-2 px-3 py-1.5 ${timeLeft < 60 ? "border-red-400" : c.ring}`}>
+        <div className={`flex items-center gap-2 rounded-xl border-2 px-3 py-1.5
+          ${timeLeft < 60 ? "border-red-400" : c.ring}`}>
           <span className="text-xs text-gray-500">Time</span>
-          <span className={`font-mono text-base font-bold ${timeLeft < 60 ? "text-red-500" : "text-gray-800 dark:text-white"}`}>
+          <span className={`font-mono text-base font-bold
+            ${timeLeft < 60 ? "text-red-500" : "text-gray-800 dark:text-white"}`}>
             {display}
           </span>
         </div>
@@ -143,13 +187,18 @@ const QuizScreen = ({ questions, level, onFinish, chapterId, subject, classLevel
 
       {/* Timer progress bar */}
       <div className="h-1 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
-        <div className={`h-full rounded-full transition-all duration-1000 ${timeLeft < 60 ? "bg-red-500" : c.bar}`}
-          style={{ width: `${timePct}%` }} />
+        <div
+          className={`h-full rounded-full transition-all duration-1000
+            ${timeLeft < 60 ? "bg-red-500" : c.bar}`}
+          style={{ width: `${timePct}%` }}
+        />
       </div>
 
       {/* Question */}
       <div className="rounded-2xl border border-gray-200 p-5 dark:border-gray-700">
-        <p className="mb-5 text-base font-semibold text-gray-900 dark:text-white">{q.mcqQuestion}</p>
+        <p className="mb-5 text-base font-semibold text-gray-900 dark:text-white">
+          {q.mcqQuestion}
+        </p>
         <div className="flex flex-col gap-2">
           {q.mcqOptions.map((opt, oi) => {
             const selected  = answers[current] === oi;
@@ -165,9 +214,15 @@ const QuizScreen = ({ questions, level, onFinish, chapterId, subject, classLevel
               style = `${c.ring} bg-gray-50 dark:bg-gray-800`;
             }
             return (
-              <button key={oi} onClick={() => !submitted && setAnswers((p) => ({ ...p, [current]: oi }))}
-                className={`flex items-center gap-3 rounded-xl border-2 p-3 text-left text-sm transition ${style}`}>
-                <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border text-xs font-bold
+              <button
+                key={oi}
+                onClick={() =>
+                  !submitted && setAnswers((p) => ({ ...p, [current]: oi }))
+                }
+                className={`flex items-center gap-3 rounded-xl border-2 p-3 text-left text-sm transition ${style}`}
+              >
+                <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center
+                  rounded-full border text-xs font-bold
                   ${selected ? `${c.ring} ${c.text}` : "border-gray-300 text-gray-400 dark:border-gray-600"}`}>
                   {["A","B","C","D"][oi]}
                 </span>
@@ -180,30 +235,43 @@ const QuizScreen = ({ questions, level, onFinish, chapterId, subject, classLevel
 
       {/* Navigation */}
       <div className="flex items-center justify-between gap-3">
-        <button onClick={() => setCurrent((p) => Math.max(0, p - 1))} disabled={current === 0}
-          className="rounded-xl border px-4 py-2 text-sm disabled:opacity-40 dark:border-gray-700">
+        <button
+          onClick={() => setCurrent((p) => Math.max(0, p - 1))}
+          disabled={current === 0}
+          className="rounded-xl border px-4 py-2 text-sm disabled:opacity-40 dark:border-gray-700"
+        >
           ← Prev
         </button>
 
         {/* Question dots */}
         <div className="flex flex-wrap justify-center gap-1.5">
           {questions.map((_, i) => (
-            <button key={i} onClick={() => setCurrent(i)}
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
               className={`h-2.5 w-2.5 rounded-full transition ${
-                i === current ? c.bar :
-                answers[i] !== undefined ? "bg-gray-400" : "bg-gray-200 dark:bg-gray-700"
-              }`} />
+                i === current
+                  ? c.bar
+                  : answers[i] !== undefined
+                  ? "bg-gray-400"
+                  : "bg-gray-200 dark:bg-gray-700"
+              }`}
+            />
           ))}
         </div>
 
         {current < questions.length - 1 ? (
-          <button onClick={() => setCurrent((p) => p + 1)}
-            className="rounded-xl border px-4 py-2 text-sm dark:border-gray-700">
+          <button
+            onClick={() => setCurrent((p) => p + 1)}
+            className="rounded-xl border px-4 py-2 text-sm dark:border-gray-700"
+          >
             Next →
           </button>
         ) : (
-          <button onClick={handleSubmit}
-            className={`rounded-xl px-4 py-2 text-sm font-semibold ${c.btn}`}>
+          <button
+            onClick={handleSubmit}   // ← calls our handleSubmit above
+            className={`rounded-xl px-4 py-2 text-sm font-semibold ${c.btn}`}
+          >
             Submit
           </button>
         )}
@@ -212,7 +280,7 @@ const QuizScreen = ({ questions, level, onFinish, chapterId, subject, classLevel
   );
 };
 
-// ── Test selection cards (landing screen) ─────────────────
+// ── Test selection cards ──────────────────────────────────
 const QuestionBank = ({ questions = [], chapterId, subject, classLevel }) => {
   const [activeTest, setActiveTest] = useState(null);
 
@@ -220,14 +288,18 @@ const QuestionBank = ({ questions = [], chapterId, subject, classLevel }) => {
     return (
       <div className="rounded-xl border-2 border-dashed border-gray-200 p-10 text-center dark:border-gray-700">
         <p className="text-4xl">🧪</p>
-        <p className="mt-2 text-sm text-gray-400">Question bank not available yet.</p>
+        <p className="mt-2 text-sm text-gray-400">
+          Question bank not available yet.
+        </p>
       </div>
     );
   }
 
   // Group questions by testLevel
   const grouped = { easy: [], medium: [], hard: [] };
-  questions.forEach((q) => { if (grouped[q.testLevel]) grouped[q.testLevel].push(q); });
+  questions.forEach((q) => {
+    if (grouped[q.testLevel]) grouped[q.testLevel].push(q);
+  });
 
   if (activeTest) {
     return (
@@ -235,7 +307,7 @@ const QuestionBank = ({ questions = [], chapterId, subject, classLevel }) => {
         questions={grouped[activeTest].slice(0, TEST_CONFIG[activeTest].questions)}
         level={activeTest}
         onFinish={() => setActiveTest(null)}
-        chapterId={chapterId}
+        chapterId={chapterId}      // ← passed down so mistakes know which chapter
         subject={subject}
         classLevel={classLevel}
       />
@@ -249,31 +321,32 @@ const QuestionBank = ({ questions = [], chapterId, subject, classLevel }) => {
       </p>
       <div className="grid gap-4 sm:grid-cols-3">
         {Object.entries(TEST_CONFIG).map(([level, cfg]) => {
-          const c = COLOR[cfg.color];
-          const count = grouped[level].length;
-          const mins = cfg.duration / 60;
+          const c         = COLOR[cfg.color];
+          const count     = grouped[level].length;
+          const mins      = cfg.duration / 60;
           const available = count >= 1;
 
           return (
-            <button key={level} onClick={() => available && setActiveTest(level)} disabled={!available}
+            <button
+              key={level}
+              onClick={() => available && setActiveTest(level)}
+              disabled={!available}
               className={`group relative flex flex-col gap-4 rounded-2xl border-2 p-5 text-left transition
-                ${available ? `${c.card} hover:-translate-y-1 hover:shadow-md cursor-pointer` : "border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-900 opacity-50 cursor-not-allowed"}`}>
-
-              {/* Icon + badge */}
+                ${available
+                  ? `${c.card} hover:-translate-y-1 hover:shadow-md cursor-pointer`
+                  : "border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-900 opacity-50 cursor-not-allowed"
+                }`}
+            >
               <div className="flex items-start justify-between">
                 <span className={`text-3xl ${c.text}`}>{cfg.icon}</span>
                 <span className={`rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${c.badge}`}>
                   {level}
                 </span>
               </div>
-
-              {/* Label */}
               <div>
                 <p className="font-bold text-gray-900 dark:text-white">{cfg.label}</p>
                 <p className={`mt-0.5 text-sm font-medium ${c.text}`}>{mins} minutes</p>
               </div>
-
-              {/* Stats */}
               <div className="flex gap-4 border-t border-gray-200 pt-3 dark:border-gray-700">
                 <div>
                   <p className="text-xs text-gray-400">Questions</p>
@@ -288,7 +361,6 @@ const QuestionBank = ({ questions = [], chapterId, subject, classLevel }) => {
                   </p>
                 </div>
               </div>
-
               {!available && (
                 <p className="text-xs text-gray-400">No questions added yet</p>
               )}

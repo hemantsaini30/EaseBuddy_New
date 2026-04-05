@@ -2,11 +2,13 @@ import { NavLink } from "react-router-dom";
 import { SUBJECTS } from "../../utils/constants";
 import { useAuth } from "../../context/AuthContext";
 import { useBookmarks } from "../../context/BookmarkContext";
+import { useMistakes } from "../../context/MistakeContext";
 
 
 const Sidebar = ({ isOpen, onClose, chapters = [], activeSubject = null }) => {
   const { bookmarks } = useBookmarks();
   const { user } = useAuth();
+  const { pendingCount } = useMistakes();
 
   return (
     <>
@@ -99,6 +101,24 @@ const Sidebar = ({ isOpen, onClose, chapters = [], activeSubject = null }) => {
               {bookmarks.length > 0 && (
                 <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900 dark:text-amber-300">
                   {bookmarks.length}
+                </span>
+              )}
+            </NavLink>
+            <NavLink
+              to="/mistakes"
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                ${isActive
+                  ? "bg-red-50 text-red-600 dark:bg-red-950 dark:text-red-400"
+                  : "text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800"
+                }`
+              }
+            >
+              <span className="text-xl">📒</span>
+              Mistake Book
+              {pendingCount > 0 && (
+                <span className="ml-auto rounded-full bg-red-100 px-2 py-0.5 text-xs font-bold text-red-600 dark:bg-red-900 dark:text-red-300">
+                  {pendingCount}
                 </span>
               )}
             </NavLink>

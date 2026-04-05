@@ -14,6 +14,7 @@ const mockTestRoutes = require("./routes/mockTestRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const bookmarkRoutes = require("./routes/bookmarkRoutes");
 const formulaRoutes = require("./routes/formulaRoutes");
+const mistakeRoutes = require("./routes/mistakeRoutes");
 
 
 dotenv.config();
@@ -36,6 +37,7 @@ app.use("/api/mock-test", mockTestRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/bookmarks", bookmarkRoutes);
 app.use("/api/formulas", formulaRoutes);
+app.use("/api/mistakes", mistakeRoutes);
 
 
 // Health check
