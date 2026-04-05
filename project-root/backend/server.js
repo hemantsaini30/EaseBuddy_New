@@ -1,4 +1,6 @@
+require("dotenv").config(); 
 const express = require("express");
+
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
@@ -17,8 +19,9 @@ const formulaRoutes = require("./routes/formulaRoutes");
 const mistakeRoutes = require("./routes/mistakeRoutes");
 
 
-dotenv.config();
+
 connectDB();
+console.log("After dotenv:", process.env.EMAIL_USER);
 
 const app = express();
 

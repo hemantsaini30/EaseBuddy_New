@@ -60,6 +60,12 @@ const Login = () => {
             <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Password
             </label>
+            <Link
+              to="/forgot-password"
+              className="text-xs text-indigo-600 hover:underline"
+            >
+              Forgot password?
+            </Link>
             <input
               type="password"
               name="password"

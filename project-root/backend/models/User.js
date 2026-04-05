@@ -47,7 +47,8 @@ const userSchema = new mongoose.Schema(
         addedAt:      { type: Date, default: Date.now },
       },
     ],
-    
+    passwordResetToken:   { type: String,  default: null },
+    passwordResetExpires: { type: Date,    default: null },
     lastActiveDate: { type: Date, default: Date.now },
     role: { type: String, enum: ["student", "admin"], default: "student" },
   },

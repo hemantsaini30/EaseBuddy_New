@@ -11,12 +11,16 @@ import BookChapters from "../pages/BookChapters";  // NEW IMPORT
 import PerformanceDashboard from "../pages/PerformanceDashboard";
 import BookmarksPage from "../pages/Bookmarks";
 import MistakeBook from "../pages/MistakeBook";
+import ForgotPassword from "../pages/auth/ForgotPassword";
+import ResetPassword  from "../pages/auth/ResetPassword";
 
 const AppRoutes = () => (
   <Routes>
     {/* Public routes */}
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
+    <Route path="/forgot-password" element={<ForgotPassword />} />
+    <Route path="/reset-password/:token" element={<ResetPassword />} />
 
     {/* Redirect root to dashboard */}
     <Route path="/" element={<Navigate to="/dashboard" replace />} />
