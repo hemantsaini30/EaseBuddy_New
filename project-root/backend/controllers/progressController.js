@@ -12,7 +12,7 @@ const getMyProgress = asyncHandler(async (req, res) => {
 // Body: { chapterId, subject, classLevel, section }
 // section: "video" | "ncert" | "pyq" | "book" | "mcq"
 const markSectionComplete = asyncHandler(async (req, res) => {
-  const { chapterId, subject, classLevel, section } = req.body;
+  const { chapterId, subject, classLevel, section, mcqScore } = req.body;
 
   let progress = await Progress.findOne({ userId: req.user._id, chapterId });
 
@@ -28,7 +28,7 @@ const markSectionComplete = asyncHandler(async (req, res) => {
   // Mark the section
   progress.set(`completedSections.${section}`, true);
   if (section === "mcq" && req.body.mcqScore !== undefined) {
-  progress.lastMCQScore = req.body.mcqScore;
+  progress.lastMCQScore = mcqScore;
   
   }
 

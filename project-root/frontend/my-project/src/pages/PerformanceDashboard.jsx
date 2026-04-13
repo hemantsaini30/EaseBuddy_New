@@ -5,6 +5,7 @@ import { useAnalytics } from "../hooks/useAnalytics";
 import { useAuth } from "../context/AuthContext";
 import { SUBJECTS } from "../utils/constants";
 import { useEffect, useRef } from "react";
+import BackButton from "../components/common/BackButton";
 
 // ── Colour map per subject ────────────────────────────────
 const SUBJECT_COLORS = {
@@ -17,6 +18,18 @@ const SUBJECT_COLORS = {
 
 // ── Radar Chart (pure SVG, no library needed) ─────────────
 const RadarChart = ({ subjects }) => {
+
+  if (!subjects || subjects.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <p className="text-4xl">📊</p>
+        <p className="mt-2 text-sm text-gray-400">
+          Complete some chapters to see your radar chart.
+        </p>
+      </div>
+    );
+  }
+
   const cx = 200, cy = 200, r = 150;
   const levels = [20, 40, 60, 80, 100];
   const n = subjects.length;
@@ -327,6 +340,7 @@ const PerformanceDashboard = () => {
 
   return (
     <Layout>
+      <BackButton to="/dashboard" label="Dashboard" className="mb-4" />
       {/* Page header */}
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
@@ -404,88 +418,97 @@ const PerformanceDashboard = () => {
               </div>
             ))}
           </div>
+{/* ── Radar chart + legend ── */}
+<div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
+  <h2 className="mb-1 text-base font-bold text-gray-800 dark:text-white">
+    Subject Strength Radar
+  </h2>
+  <p className="mb-6 text-xs text-gray-400">
+    Outer edge = 100% · Solid fill = overall score · Dashed = completion only
+  </p>
 
-          {/* ── Radar chart + legend ── */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
-            <h2 className="mb-1 text-base font-bold text-gray-800 dark:text-white">
-              Subject Strength Radar
-            </h2>
-            <p className="mb-6 text-xs text-gray-400">
-              Outer edge = 100% · Solid fill = overall score · Dashed = completion only
-            </p>
-            <RadarChart subjects={data.subjects} />
-
-            {/* Legend */}
-            <div className="mt-4 flex flex-wrap justify-center gap-3">
-              {data.subjects.map((s) => {
-                const col = SUBJECT_COLORS[s.subject];
-                return (
-                  <div key={s.subject} className="flex items-center gap-1.5">
-                    <span
-                      className="h-2.5 w-2.5 rounded-full"
-                      style={{ backgroundColor: col?.stroke }}
-                    />
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {col?.label} ({s.overallScore}%)
-                    </span>
-                  </div>
-                );
-              })}
+  {data.subjects && data.subjects.length > 0 ? (
+    <>
+      <RadarChart subjects={data.subjects} />
+      <div className="mt-4 flex flex-wrap justify-center gap-3">
+        {data.subjects.map((s) => {
+          const col = SUBJECT_COLORS[s.subject];
+          return (
+            <div key={s.subject} className="flex items-center gap-1.5">
+              <span
+                className="h-2.5 w-2.5 rounded-full"
+                style={{ backgroundColor: col?.stroke }}
+              />
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {col?.label} ({s.overallScore}%)
+              </span>
             </div>
-          </div>
+          );
+        })}
+      </div>
+    </>
+  ) : (
+    <div className="flex flex-col items-center justify-center py-10 text-center">
+      <p className="text-4xl">📊</p>
+      <p className="mt-2 text-sm text-gray-400">
+        Complete chapters and take MCQ tests to see your radar chart.
+      </p>
+    </div>
+  )}
+</div>
 
-          {/* ── Subject breakdown bars ── */}
-          <div>
-            <h2 className="mb-3 text-base font-bold text-gray-800 dark:text-white">
-              Subject Breakdown
-            </h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {data.subjects.map((s) => (
-                <SubjectBar key={s.subject} subjectData={s} />
-              ))}
-            </div>
-          </div>
+{/* ── Subject breakdown bars ── */}
+<div>
+  <h2 className="mb-3 text-base font-bold text-gray-800 dark:text-white">
+    Subject Breakdown
+  </h2>
+  <div className="grid gap-3 sm:grid-cols-2">
+    {data.subjects.map((s) => (
+      <SubjectBar key={s.subject} subjectData={s} />
+    ))}
+  </div>
+</div>
 
-          {/* ── Weak + Strong chapters ── */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            {/* Weak */}
-            <div className="rounded-2xl border border-red-200 bg-white p-4 dark:border-red-900 dark:bg-gray-900">
-              <div className="mb-3 flex items-center gap-2">
-                <span className="text-lg">🔴</span>
-                <h2 className="text-sm font-bold text-gray-800 dark:text-white">
-                  Needs Most Attention
-                </h2>
-              </div>
-              {data.globalWeak.length === 0 ? (
-                <p className="text-xs text-gray-400">
-                  Take some MCQ tests to see weak areas.
-                </p>
-              ) : (
-                data.globalWeak.map((ch, i) => (
-                  <ChapterRow key={ch.chapterId} chapter={ch} rank={i + 1} type="weak" />
-                ))
-              )}
-            </div>
+{/* ── Weak + Strong chapters ── */}
+<div className="grid gap-4 sm:grid-cols-2">
+  {/* Weak */}
+  <div className="rounded-2xl border border-red-200 bg-white p-4 dark:border-red-900 dark:bg-gray-900">
+    <div className="mb-3 flex items-center gap-2">
+      <span className="text-lg">🔴</span>
+      <h2 className="text-sm font-bold text-gray-800 dark:text-white">
+        Needs Most Attention
+      </h2>
+    </div>
+    {data.globalWeak.length === 0 ? (
+      <p className="text-xs text-gray-400">
+        Take some MCQ tests to see weak areas.
+      </p>
+    ) : (
+      data.globalWeak.map((ch, i) => (
+        <ChapterRow key={ch.chapterId} chapter={ch} rank={i + 1} type="weak" />
+      ))
+    )}
+  </div>
 
-            {/* Strong */}
-            <div className="rounded-2xl border border-green-200 bg-white p-4 dark:border-green-900 dark:bg-gray-900">
-              <div className="mb-3 flex items-center gap-2">
-                <span className="text-lg">🟢</span>
-                <h2 className="text-sm font-bold text-gray-800 dark:text-white">
-                  Your Strongest Areas
-                </h2>
-              </div>
-              {data.globalStrong.length === 0 ? (
-                <p className="text-xs text-gray-400">
-                  Complete chapters with MCQ tests to see strengths.
-                </p>
-              ) : (
-                data.globalStrong.map((ch, i) => (
-                  <ChapterRow key={ch.chapterId} chapter={ch} rank={i + 1} type="strong" />
-                ))
-              )}
-            </div>
-          </div>
+  {/* Strong */}
+  <div className="rounded-2xl border border-green-200 bg-white p-4 dark:border-green-900 dark:bg-gray-900">
+    <div className="mb-3 flex items-center gap-2">
+      <span className="text-lg">🟢</span>
+      <h2 className="text-sm font-bold text-gray-800 dark:text-white">
+        Your Strongest Areas
+      </h2>
+    </div>
+    {data.globalStrong.length === 0 ? (
+      <p className="text-xs text-gray-400">
+        Complete chapters with MCQ tests to see strengths.
+      </p>
+    ) : (
+      data.globalStrong.map((ch, i) => (
+        <ChapterRow key={ch.chapterId} chapter={ch} rank={i + 1} type="strong" />
+      ))
+    )}
+  </div>
+</div>
 
           {/* ── Per-subject chapter heatmap ── */}
           <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-900">

@@ -4,6 +4,7 @@ import Layout from "../components/common/Layout";
 import BookmarkButton from "../components/common/BookmarkButton";
 import { useBookmarks } from "../context/BookmarkContext";
 import { SUBJECTS } from "../utils/constants";
+import BackButton from "../components/common/BackButton";
 
 // ── Group bookmarks by subject ────────────────────────────
 const groupBySubject = (bookmarks) => {
@@ -152,6 +153,7 @@ const BookmarksPage = () => {
       {/* Page header */}
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
+          <BackButton to="/dashboard" label="Dashboard" className="mb-2" />
           <h1 className="text-2xl font-black text-gray-900 dark:text-white">
             My Bookmarks
           </h1>

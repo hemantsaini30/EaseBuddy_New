@@ -3,6 +3,7 @@ import Layout from "../components/common/Layout";
 import { BOOKS, BOOK_COLORS, MULTI_BOOK_SUBJECTS } from "../data/bookConfig";
 import { SUBJECTS } from "../utils/constants";
 import { useAuth } from "../context/AuthContext";
+import BackButton from "../components/common/BackButton";
 
 const BookList = () => {
   const { subjectId } = useParams();
@@ -20,6 +21,7 @@ const BookList = () => {
 
   return (
     <Layout>
+      <BackButton to="/dashboard" label="Dashboard" className="mb-4" />
       {/* Breadcrumb */}
       <div className="mb-2 flex items-center gap-2 text-sm text-gray-400">
         <button onClick={() => navigate("/dashboard")} className="hover:text-gray-600 dark:hover:text-gray-300">

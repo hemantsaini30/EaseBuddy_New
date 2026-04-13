@@ -4,6 +4,7 @@ import Layout from "../components/common/Layout";
 import { mockTestService } from "../services/mockTestService";
 import { useAuth } from "../context/AuthContext";
 import { SUBJECTS } from "../utils/constants";
+import BackButton from "../components/common/BackButton";
 
 // ─────────────────────────────────────────────────────────
 // STEP 1: CONFIG SCREEN
@@ -584,6 +585,7 @@ const MockTest = () => {
   return (
     <Layout>
       <div className="pb-20">
+        <BackButton to="/dashboard" label="Dashboard" className="mb-4" />
         {screen === "config" && (
           <ConfigScreen onStart={handleStart} classLevel={user?.classLevel || 10} />
         )}

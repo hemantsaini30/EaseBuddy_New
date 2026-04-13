@@ -8,6 +8,7 @@ import { SUBJECTS } from "../utils/constants";
 import { useAuth } from "../context/AuthContext";
 import { useProgress } from "../hooks/useProgress";
 import BookmarkButton from "../components/common/BookmarkButton";
+import BackButton from "../components/common/BackButton";
 
 const BookChapters = () => {
   const { subjectId, bookId } = useParams();
@@ -72,6 +73,16 @@ const BookChapters = () => {
         <span>/</span>
         <span className="text-gray-600 dark:text-gray-300">{book.title}</span>
       </div>
+
+      {/* Breadcrumb back buttons */}
+    <div className="mb-4 flex items-center gap-2 text-sm text-gray-400">
+      <BackButton to="/dashboard" label="Dashboard" />
+      <span>/</span>
+      <BackButton
+        to={`/subject/${subjectId}`}
+        label={subject?.label}
+      />
+    </div>
 
       {/* Book header */}
       <div className={`mb-8 flex items-center gap-4 rounded-2xl border-2 p-6 ${bookColors.bg} ${bookColors.border}`}>

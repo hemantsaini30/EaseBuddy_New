@@ -4,6 +4,7 @@ import Layout from "../components/common/Layout";
 import Loader from "../components/common/Loader";
 import { useMistakes } from "../context/MistakeContext";
 import { SUBJECTS } from "../utils/constants";
+import BackButton from "../components/common/BackButton";
 
 // ── Status config ─────────────────────────────────────────
 const STATUS = {
@@ -267,6 +268,7 @@ const MistakeBook = () => {
 
   return (
     <Layout>
+      <BackButton to="/dashboard" label="Dashboard" className="mb-4" />
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-black text-gray-900 dark:text-white">

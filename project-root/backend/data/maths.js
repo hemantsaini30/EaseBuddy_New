@@ -1,99 +1,318 @@
 
-    // ═══════════════════════════════════════════════════════════════
-    // CH 1 — REAL NUMBERS
-    // ═══════════════════════════════════════════════════════════════
-    const ch1 = chapterMap["real-numbers"];
-    if (ch1) {
-      const fb = { chapterId:ch1._id, subject:"Mathematics", classLevel:10, chapterName:"Real Numbers" };
-      formulas.push(
-        { ...fb, order:1, isKeyFormula:true,  title:"Euclid's Division Lemma",  formula:"a = bq + r,  0 ≤ r < b", description:"For any two positive integers a and b, there exist unique integers q (quotient) and r (remainder) such that a = bq + r.", variables:[{symbol:"a",meaning:"Dividend"},{symbol:"b",meaning:"Divisor (b > 0)"},{symbol:"q",meaning:"Quotient"},{symbol:"r",meaning:"Remainder (0 ≤ r < b)"}], example:"135 = 6 × 22 + 3", category:"Division Lemma" },
-        { ...fb, order:2, isKeyFormula:true,  title:"HCF × LCM = Product of Two Numbers", formula:"HCF(a,b) × LCM(a,b) = a × b", description:"For any two positive integers a and b, the product of their HCF and LCM equals the product of the numbers.", example:"a=12, b=18: HCF=6, LCM=36. 6×36=216=12×18 ✓", category:"HCF and LCM" },
-        { ...fb, order:3, isKeyFormula:false, title:"Terminating Decimal Condition", formula:"p/q terminates ⟺ q = 2ⁿ × 5ᵐ (in lowest terms)", description:"A rational number p/q (in lowest terms) has a terminating decimal expansion if and only if q has no prime factors other than 2 and 5.", example:"7/40: 40=2³×5 → terminates. 7/12: 12=2²×3 → non-terminating repeating", category:"Decimal Expansion" },
-        { ...fb, order:4, isKeyFormula:false, title:"Irrational Numbers",          formula:"√2, √3, √5, π are irrational — cannot be expressed as p/q", description:"Proof by contradiction: Assume √2 = p/q in lowest terms → p² = 2q² → p is even → p=2m → 4m²=2q² → q²=2m² → q is even → contradicts p/q being lowest terms → √2 is irrational.", category:"Irrational Numbers" }
-      );
 
-      // PYQs
-      const pyqs = [
-        { title:"PYQ 2023 — HCF and LCM", question:"Find the HCF and LCM of 306 and 657 using prime factorisation. Verify: HCF × LCM = Product of the two numbers.", answer:"Prime factorisation:\n306 = 2 × 3² × 17\n657 = 3² × 73\n\nHCF = product of common primes with lowest power = 3² = 9\n\nLCM = product of all primes with highest power = 2 × 3² × 17 × 73 = 22338\n\nVerification:\nHCF × LCM = 9 × 22338 = 201042\na × b = 306 × 657 = 201042 ✓", year:2023, marks:3, difficulty:"medium", order:1 },
-        { title:"PYQ 2022 — Euclid's Division Lemma", question:"Use Euclid's division algorithm to find the HCF of 135 and 225.", answer:"Using Euclid's Algorithm (divide larger by smaller):\nStep 1: 225 = 135 × 1 + 90\nStep 2: 135 = 90 × 1 + 45\nStep 3: 90 = 45 × 2 + 0\n\nSince remainder = 0, HCF = 45\n\nVerification: 225 = 5 × 45, 135 = 3 × 45 ✓", year:2022, marks:3, difficulty:"medium", order:2 },
-        { title:"PYQ 2023 — Prove Irrational", question:"Prove that √5 is irrational.", answer:"Proof by Contradiction:\nAssume √5 is rational. Then √5 = p/q where p, q are co-prime integers and q ≠ 0.\n\nSquaring both sides: 5 = p²/q² → p² = 5q²  ...(1)\n\nThis means 5 divides p². Since 5 is prime, 5 divides p.\nSo p = 5m for some integer m.\n\nSubstituting in (1): (5m)² = 5q² → 25m² = 5q² → q² = 5m²\n\nThis means 5 divides q². Since 5 is prime, 5 divides q.\n\nSo both p and q are divisible by 5, which CONTRADICTS our assumption that p and q are co-prime.\n\n∴ Our assumption is wrong. Hence √5 is irrational. ■", year:2023, marks:3, difficulty:"hard", order:3 },
-        { title:"PYQ 2022 — Decimal Expansion", question:"Without actually performing long division, state whether the following rational numbers will have a terminating or non-terminating repeating decimal expansion: (i) 13/3125  (ii) 17/8  (iii) 23/75", answer:"(i) 13/3125: 3125 = 5⁵ = 2⁰ × 5⁵ → only prime factor is 5 → TERMINATING\n13/3125 = 13/5⁵ = 13 × 2⁵ / (2⁵ × 5⁵) = 416/100000 = 0.00416\n\n(ii) 17/8: 8 = 2³ = 2³ × 5⁰ → only prime factor is 2 → TERMINATING\n17/8 = 2.125\n\n(iii) 23/75: 75 = 3 × 5² → contains prime factor 3 (other than 2 and 5) → NON-TERMINATING REPEATING", year:2022, marks:3, difficulty:"medium", order:4 },
-        { title:"PYQ 2021 — Prove Irrational (Composite)", question:"Prove that 3 + 2√5 is irrational.", answer:"Assume 3 + 2√5 is rational.\nThen 3 + 2√5 = p/q where p, q are integers, q ≠ 0, HCF(p,q) = 1.\n\n→ 2√5 = p/q − 3 = (p − 3q)/q\n→ √5 = (p − 3q)/(2q)\n\nSince p, q are integers, (p − 3q)/(2q) is rational.\nThis means √5 is rational.\n\nBut this CONTRADICTS the known fact that √5 is irrational.\n\n∴ Our assumption is wrong. Hence 3 + 2√5 is irrational. ■", year:2021, marks:3, difficulty:"hard", order:5 },
-        { title:"PYQ 2020 — HCF by Euclid", question:"Find the HCF of 867 and 255 using Euclid's division algorithm.", answer:"Step 1: 867 = 255 × 3 + 102\nStep 2: 255 = 102 × 2 + 51\nStep 3: 102 = 51 × 2 + 0\n\nRemainder = 0, so HCF(867, 255) = 51\n\nVerification: 867 = 17 × 51, 255 = 5 × 51 ✓", year:2020, marks:3, difficulty:"medium", order:6 },
-        { title:"PYQ 2019 — LCM of Three Numbers", question:"Find the LCM of 12, 15, and 21 using prime factorisation.", answer:"Prime factorisation:\n12 = 2² × 3\n15 = 3 × 5\n21 = 3 × 7\n\nLCM = product of all primes with their highest powers\n= 2² × 3 × 5 × 7\n= 4 × 3 × 5 × 7\n= 420\n\nNote: HCF(12,15,21) = 3 (common factor only).\nFor three numbers: HCF × LCM ≠ product of all three (this identity holds only for two numbers).", year:2019, marks:2, difficulty:"easy", order:7 },
-        { title:"PYQ 2023 — Rational Between Irrationals", question:"Given that √2 is irrational, prove that (5 + 3√2) is irrational.", answer:"Assume 5 + 3√2 is rational = p/q (p,q integers, q ≠ 0, co-prime).\n\n→ 3√2 = p/q − 5 = (p − 5q)/q\n→ √2 = (p − 5q)/(3q)\n\nSince p, q are integers, (p − 5q)/(3q) is rational → √2 is rational.\n\nThis CONTRADICTS the given fact that √2 is irrational.\n\n∴ 5 + 3√2 is irrational. ■", year:2023, marks:2, difficulty:"medium", order:8 },
-        { title:"PYQ 2022 — Application of HCF", question:"Three bells ring at intervals of 6, 12, and 18 minutes respectively. They ring together at 12 noon. At what time will they next ring together?", answer:"We need LCM(6, 12, 18):\n6 = 2 × 3\n12 = 2² × 3\n18 = 2 × 3²\nLCM = 2² × 3² = 4 × 9 = 36 minutes\n\nThe bells will ring together again after 36 minutes.\n12:00 noon + 36 minutes = 12:36 PM\n\nAnswer: They will next ring together at 12:36 PM.", year:2022, marks:2, difficulty:"easy", order:9 },
-        { title:"PYQ 2021 — Decimal Expansion Type", question:"What type of decimal expansion does 77/210 have? Justify your answer.", answer:"First, reduce to lowest terms:\n77/210: HCF(77, 210) = 7\n77/210 = 11/30\n\nNow check denominator: 30 = 2 × 3 × 5\n30 contains prime factor 3 (other than 2 and 5).\n\nTherefore, 11/30 has a NON-TERMINATING REPEATING decimal expansion.\n11/30 = 0.3666... = 0.36̄", year:2021, marks:2, difficulty:"easy", order:10 },
-        { title:"PYQ 2020 — Prove √3 Irrational", question:"Prove that √3 is irrational. Hence show that 4 + √3 is also irrational.", answer:"Part 1: Prove √3 is irrational.\nAssume √3 = p/q (co-prime, q≠0).\n→ 3 = p²/q² → p² = 3q² → 3|p² → 3|p (since 3 is prime)\n→ p = 3k → 9k² = 3q² → q² = 3k² → 3|q² → 3|q\n→ Both p and q divisible by 3 — contradicts co-prime.\n∴ √3 is irrational. ■\n\nPart 2: Prove 4 + √3 is irrational.\nAssume 4 + √3 = r (rational).\n→ √3 = r − 4 = rational (since rational − rational = rational).\n→ But √3 is irrational. Contradiction.\n∴ 4 + √3 is irrational. ■", year:2020, marks:5, difficulty:"hard", order:11 },
-        { title:"PYQ 2019 — Euclid's Algorithm Extended", question:"Show that any positive odd integer is of the form 6q+1, 6q+3 or 6q+5 where q is some integer.", answer:"By Euclid's Division Lemma, any positive integer a can be written as:\na = 6q + r where 0 ≤ r < 6 (i.e., r ∈ {0,1,2,3,4,5})\n\nSo a can be: 6q, 6q+1, 6q+2, 6q+3, 6q+4, or 6q+5.\n\nNow check which are odd:\n• 6q = 2(3q) → even\n• 6q+1 → odd ✓\n• 6q+2 = 2(3q+1) → even\n• 6q+3 = 3(2q+1) → odd ✓\n• 6q+4 = 2(3q+2) → even\n• 6q+5 → odd ✓\n\nTherefore, any positive odd integer is of the form 6q+1, 6q+3 or 6q+5. ■", year:2019, marks:3, difficulty:"hard", order:12 },
-        { title:"PYQ 2018 — Fundamental Theorem", question:"Explain the Fundamental Theorem of Arithmetic with an example.", answer:"Fundamental Theorem of Arithmetic:\nEvery composite number can be expressed (factorised) as a product of primes, and this factorisation is UNIQUE (except for the order of factors).\n\nThis theorem has two parts:\n1. EXISTENCE: Every composite number has at least one prime factorisation.\n2. UNIQUENESS: The prime factorisation is unique (prime factors and their powers are fixed).\n\nExample: 360 = 2³ × 3² × 5\nNo matter how we factorise 360, we always get the same prime factors (2, 3, 5) with the same powers (3, 2, 1).\n\nApplication: Used to find HCF and LCM of numbers. The Fundamental Theorem guarantees these are well-defined.", year:2018, marks:2, difficulty:"easy", order:13 },
-        { title:"PYQ 2023 — HCF from LCM", question:"If HCF(a, b) = 4 and a × b = 3600, find LCM(a, b).", answer:"Using the relation: HCF(a, b) × LCM(a, b) = a × b\n\n4 × LCM(a, b) = 3600\nLCM(a, b) = 3600 / 4 = 900\n\nAnswer: LCM(a, b) = 900", year:2023, marks:1, difficulty:"easy", order:14 },
-        { title:"PYQ 2022 — Composite Proof", question:"Prove that n² − n is divisible by 2 for every positive integer n.", answer:"n² − n = n(n − 1)\n\nThis is the product of two consecutive integers: (n−1) and n.\n\nIn any two consecutive integers, one of them is always even (divisible by 2).\n\nTherefore, their product n(n−1) is always divisible by 2.\n\nHence n² − n is divisible by 2 for every positive integer n. ■\n\nAlternative: If n is even → n is divisible by 2 → n(n-1) divisible by 2. If n is odd → (n-1) is even → n(n-1) divisible by 2. ✓", year:2022, marks:2, difficulty:"medium", order:15 },
-      ];
-      pyqs.forEach(q => resources.push({ chapterId:ch1._id, type:"pyq", ...q }));
+const dotenv = require("dotenv");
+dotenv.config({ path: "../.env" });
 
-      // EASY MCQs
-      [
-        { title:"E1", mcqQuestion:"The HCF of 96 and 404 is:", mcqOptions:["4","8","2","16"], mcqCorrectIndex:0, mcqExplanation:"Prime factorisation: 96 = 2⁵ × 3; 404 = 2² × 101. HCF = lowest power of common primes = 2² = 4. Note: 101 is prime and does not divide 96, so it doesn't contribute to HCF." },
-        { title:"E2", mcqQuestion:"The decimal expansion of 13/3125 is:", mcqOptions:["Non-terminating repeating","Terminating","Non-terminating non-repeating","Cannot be determined"], mcqCorrectIndex:1, mcqExplanation:"3125 = 5⁵ = 2⁰ × 5⁵. The denominator has only 5 as a prime factor (no other primes). By the theorem on terminating decimals, since q = 2ⁿ × 5ᵐ form, 13/3125 is TERMINATING. 13/3125 = 0.00416." },
-        { title:"E3", mcqQuestion:"The largest number which divides 70 and 125 leaving remainder 5 and 8 respectively is:", mcqOptions:["13","65","875","1750"], mcqCorrectIndex:0, mcqExplanation:"We need HCF of (70−5) and (125−8) = HCF(65, 117). 65 = 5×13; 117 = 9×13. HCF = 13. The required number is 13. Check: 70 = 13×5 + 5 ✓; 125 = 13×9 + 8 ✓." },
-        { title:"E4", mcqQuestion:"If HCF(a,b) = 12 and a × b = 1800, then LCM(a,b) is:", mcqOptions:["150","12","21600","1800"], mcqCorrectIndex:0, mcqExplanation:"HCF × LCM = a × b → 12 × LCM = 1800 → LCM = 1800/12 = 150. This is a direct application of the fundamental relation between HCF and LCM." },
-        { title:"E5", mcqQuestion:"Which of the following is irrational?", mcqOptions:["√4","√(9/4)","√7","0.25"], mcqCorrectIndex:2, mcqExplanation:"√4 = 2 (rational); √(9/4) = 3/2 (rational); 0.25 = 1/4 (rational); √7 — since 7 is not a perfect square, √7 is irrational. An irrational number cannot be expressed as p/q where p,q are integers and q≠0." },
-        { title:"E6", mcqQuestion:"Every composite number can be expressed as a product of primes in how many ways?", mcqOptions:["Only one way (unique)","Two ways","Many ways","Depends on the number"], mcqCorrectIndex:0, mcqExplanation:"The Fundamental Theorem of Arithmetic states that every composite number has a unique prime factorisation (except for the order of factors). E.g., 12 = 2² × 3 always — there is no other combination of primes that gives 12. This uniqueness is what makes prime factorisation so powerful in number theory." },
-        { title:"E7", mcqQuestion:"The HCF of two numbers is 9 and their LCM is 2016. If one number is 54, the other number is:", mcqOptions:["126","336","448","252"], mcqCorrectIndex:1, mcqExplanation:"HCF × LCM = a × b → 9 × 2016 = 54 × b → b = (9 × 2016)/54 = 18144/54 = 336. Check: HCF(54,336)? 54=2×3³, 336=2⁴×3×7. HCF=2×3=6... hmm. Let me recompute: if HCF=9: both must be divisible by 9. 54=9×6, 336=9×37.3... 336 not divisible by 9. So answer is (B) with the given data accepted at face value for CBSE." },
-        { title:"E8", mcqQuestion:"The prime factorisation of 3825 is:", mcqOptions:["3 × 5² × 51","3² × 5² × 17","3 × 5 × 255","3² × 425"], mcqCorrectIndex:1, mcqExplanation:"3825 ÷ 5 = 765; 765 ÷ 5 = 153; 153 ÷ 3 = 51; 51 ÷ 3 = 17. So 3825 = 5² × 3² × 17 = 3² × 5² × 17. Verify: 9 × 25 × 17 = 225 × 17 = 3825 ✓." },
-        { title:"E9", mcqQuestion:"The number of decimal places after which the decimal expansion of 23/(2² × 5) terminates is:", mcqOptions:["1","2","3","4"], mcqCorrectIndex:1, mcqExplanation:"23/(2²×5) = 23/20. To terminate, write denominator as 10ⁿ: 20 = 2²×5 = 2²×5¹. Multiply numerator and denominator by 5¹ to make denominator 10²: 23×5/(2²×5²) = 115/100 = 1.15. So it terminates after 2 decimal places. General rule: number of decimal places = max(power of 2, power of 5) in denominator." },
-        { title:"E10", mcqQuestion:"Which of these represents the form of any odd integer?", mcqOptions:["2q","2q + 1","2q − 1 only","3q + 1"], mcqCorrectIndex:1, mcqExplanation:"By Euclid's Division Lemma with b=2: any integer a = 2q + r where r ∈ {0,1}. r=0 → a=2q (even); r=1 → a=2q+1 (odd). ALL odd integers can be written as 2q+1 for some non-negative integer q. '2q−1 only' misses some odd integers (e.g., 1 = 2(1)−1 but also = 2(0)+1)." },
-        { title:"E11", mcqQuestion:"If 6ⁿ ends with digit 0, then n is:", mcqOptions:["Any even number","Any odd number","There is no such n","Only n=6"], mcqCorrectIndex:2, mcqExplanation:"A number ends in 0 iff it's divisible by 10 = 2 × 5. So 6ⁿ must be divisible by 5. But 6ⁿ = 2ⁿ × 3ⁿ — the only prime factors are 2 and 3. There is NO factor of 5 in 6ⁿ for any positive integer n. Therefore 6ⁿ NEVER ends in 0." },
-        { title:"E12", mcqQuestion:"LCM(a, b) × HCF(a, b) = ?", mcqOptions:["a + b","a − b","a × b","a ÷ b"], mcqCorrectIndex:2, mcqExplanation:"For any two positive integers a and b: HCF(a,b) × LCM(a,b) = a × b. This is a standard result derived from the Fundamental Theorem of Arithmetic. Note: This formula works ONLY for two numbers, not three or more." },
-        { title:"E13", mcqQuestion:"The HCF of 4052 and 12576 using Euclid's algorithm (after one step: 12576 = 4052 × 3 + 420) is:", mcqOptions:["420","4","8","52"], mcqCorrectIndex:1, mcqExplanation:"Continue: 4052 = 420 × 9 + 272; 420 = 272 × 1 + 148; 272 = 148 × 1 + 124; 148 = 124 × 1 + 24; 124 = 24 × 5 + 4; 24 = 4 × 6 + 0. HCF = 4. Verify: 4052 = 4 × 1013, 12576 = 4 × 3144, HCF(1013,3144)=1 since 1013 is prime. ✓" },
-        { title:"E14", mcqQuestion:"The rational number p/q has a terminating decimal if q is of the form:", mcqOptions:["2ⁿ × 3ᵐ","2ⁿ × 5ᵐ","3ⁿ × 5ᵐ","5ⁿ × 7ᵐ"], mcqCorrectIndex:1, mcqExplanation:"A rational number p/q (in its lowest terms) has a terminating decimal expansion if and only if the denominator q is of the form 2ⁿ × 5ᵐ, where n and m are non-negative integers. This is because our decimal system is base 10 = 2 × 5, so denominators with only factors of 2 and 5 can be converted to powers of 10." },
-        { title:"E15", mcqQuestion:"What is the LCM of 23 and 29?", mcqOptions:["1","23","29","667"], mcqCorrectIndex:3, mcqExplanation:"Both 23 and 29 are prime numbers, so their HCF = 1. For two coprime numbers, LCM = a × b = 23 × 29 = 667. When HCF = 1, LCM = product of the numbers. This is a property of coprime numbers." },
-      ].forEach((q,i) => resources.push({ chapterId:ch1._id, type:"mcq", testLevel:"easy", order:i+1, ...q }));
+const mongoose = require("mongoose");
+const Chapter  = require("../models/Chapter");
+const Resource = require("../models/Resource");
+const Formula  = require("../models/Formula");
 
-      // MEDIUM MCQs
-      [
-        { title:"M1", mcqQuestion:"The HCF of two numbers is 18 and their LCM is 378. If one number is 54, the other is:", mcqOptions:["126","252","36","108"], mcqCorrectIndex:0, mcqExplanation:"HCF × LCM = a × b → 18 × 378 = 54 × b → b = 6804/54 = 126. Check: HCF(54,126): 54=2×3³, 126=2×3²×7. HCF=2×3²=18 ✓. LCM=2×3³×7=378 ✓." },
-        { title:"M2", mcqQuestion:"After how many decimal places will the decimal expansion of 47/2³ × 5² terminate?", mcqOptions:["2","3","4","5"], mcqCorrectIndex:1, mcqExplanation:"47/(2³×5²). To write as k/10ⁿ: multiply top and bottom by 5 to balance: 47×5/(2³×5³)=235/10³=235/1000=0.235. Terminates after 3 decimal places. Rule: number of decimal places = max(power of 2, power of 5) = max(3,2) = 3." },
-        { title:"M3", mcqQuestion:"If the LCM of 12 and 42 is 10m + 4, then m is:", mcqOptions:["1","2","8","12"], mcqCorrectIndex:2, mcqExplanation:"LCM(12,42): 12=2²×3, 42=2×3×7. LCM=2²×3×7=84. So 10m+4=84 → 10m=80 → m=8." },
-        { title:"M4", mcqQuestion:"n² + n is divisible by 2. This is because:", mcqOptions:["n² is always even","n is always even","n² + n = n(n+1) — product of consecutive integers, always even","n² − n is divisible by 2"], mcqCorrectIndex:2, mcqExplanation:"n(n+1) is the product of two consecutive integers. In any pair of consecutive integers, one is even and one is odd. Their product is always even (divisible by 2). This is a standard result. n is not always even, and n² is not always even — but their product n(n+1) is always even." },
-        { title:"M5", mcqQuestion:"The LCM of smallest prime and smallest composite number is:", mcqOptions:["2","4","6","8"], mcqCorrectIndex:1, mcqExplanation:"Smallest prime = 2. Smallest composite = 4 (= 2²). LCM(2,4): Since 4 = 2², LCM = 2² = 4. Check: 4 is divisible by both 2 and 4 ✓, and no smaller positive integer satisfies this." },
-        { title:"M6", mcqQuestion:"Two numbers have HCF = 1. This means they are:", mcqOptions:["Both prime","Both even","Co-prime (no common factor other than 1)","Consecutive integers only"], mcqCorrectIndex:2, mcqExplanation:"Two numbers with HCF = 1 are called CO-PRIME (or relatively prime). They share no common factor other than 1. They need not be prime themselves (e.g., 8 and 9 are co-prime but neither is prime) nor consecutive (e.g., 4 and 9 are co-prime)." },
-        { title:"M7", mcqQuestion:"Prove that p/q = 0.3̄7̄2̄ (i.e., 0.372372...) is rational by expressing it as a fraction.", mcqOptions:["372/999","372/1000","372/99","37/99"], mcqCorrectIndex:0, mcqExplanation:"Let x = 0.372372... (3 digits repeat). Multiply by 1000: 1000x = 372.372372... Subtract: 1000x − x = 372 → 999x = 372 → x = 372/999 = 124/333. So it is rational. For n repeating digits, multiply by 10ⁿ. The denominator has n nines." },
-        { title:"M8", mcqQuestion:"The product of two consecutive positive integers is divisible by:", mcqOptions:["2 only","3 only","Both 2 and 3","6 always"], mcqCorrectIndex:0, mcqExplanation:"Product of two consecutive integers n(n+1): ALWAYS divisible by 2 (one of them is even). Not always divisible by 3 — e.g., 4×5=20, not divisible by 3. Not always divisible by 6 — e.g., 20 is not. Answer: 2 only (always). Product of THREE consecutive integers is divisible by 6." },
-        { title:"M9", mcqQuestion:"If 1/(2 − √3) is written in the form a + b√3, then a + b =", mcqOptions:["5","−3","2+√3","4"], mcqCorrectIndex:0, mcqExplanation:"Rationalise: 1/(2−√3) × (2+√3)/(2+√3) = (2+√3)/(4−3) = (2+√3)/1 = 2+√3. So a=2, b=1. a+b = 2+1 = 3. Hmm — options say 5. If question means a+b where expression = a+b√3: a=2, b=1, a+b=3. None match 5. If (2+√3)² = 7+4√3: a=7,b=4,a+b=11. Standard rationalization gives 2+√3, a+b=3." },
-        { title:"M10", mcqQuestion:"If p and q are two consecutive natural numbers, then HCF(p, q) is:", mcqOptions:["p","q","1","pq"], mcqCorrectIndex:2, mcqExplanation:"Consecutive integers are always co-prime. Proof: Let d = HCF(p, q). Then d|p and d|q → d|(q−p) = d|1 → d = 1. So HCF of any two consecutive integers is always 1. This is a fundamental number theory result. E.g., HCF(100, 101) = 1; HCF(999, 1000) = 1." },
-        { title:"M11", mcqQuestion:"The number 0.2353535... = 0.2̄3̄5̄ expressed as p/q is:", mcqOptions:["235/999","233/990","7/30","23/99"], mcqCorrectIndex:1, mcqExplanation:"x = 0.2353535... = 0.2 + 0.035353... The non-repeating part is 2 (1 digit), repeating part is 35 (2 digits). Multiply by 10: 10x = 2.353535... Multiply by 1000: 1000x = 235.3535... 1000x − 10x = 235.3535... − 2.3535... = 233. 990x = 233 → x = 233/990. Verify: 233/990 = 0.235353... ✓" },
-        { title:"M12", mcqQuestion:"The number 3 × 7 × 11 × 13 + 13 is:", mcqOptions:["Prime","Composite","Neither","1"], mcqCorrectIndex:1, mcqExplanation:"3×7×11×13 + 13 = 13(3×7×11 + 1) = 13(231 + 1) = 13 × 232 = 13 × 8 × 29. This number has factors 13, 8, and 29 (beyond 1 and itself) → it is COMPOSITE. The trick: 13 is a common factor. Numbers of the form p₁×p₂×...×pₙ + pₙ always have pₙ as a factor → composite." },
-        { title:"M13", mcqQuestion:"If a = 2³ × 3 × 5² and b = 2 × 3³ × 5² × 7, then LCM(a, b)/HCF(a, b) is:", mcqOptions:["2² × 3² × 7","2³ × 3³ × 5² × 7","2³ × 3 × 5²","2² × 3² × 5 × 7"], mcqCorrectIndex:0, mcqExplanation:"HCF = 2¹ × 3¹ × 5² (lowest powers of common primes). LCM = 2³ × 3³ × 5² × 7 (highest powers of all primes). LCM/HCF = (2³×3³×5²×7)/(2×3×5²) = 2² × 3² × 7 = 4 × 9 × 7 = 252." },
-        { title:"M14", mcqQuestion:"The decimal expansion of a rational number is always:", mcqOptions:["Terminating","Non-terminating repeating","Either terminating or non-terminating repeating","Non-terminating non-repeating"], mcqCorrectIndex:2, mcqExplanation:"The decimal expansion of any rational number is either terminating OR non-terminating but repeating (recurring). This is a theorem. Non-terminating non-repeating decimals represent IRRATIONAL numbers (like π, √2, √3). So rationals are exactly those real numbers whose decimal expansions terminate or repeat." },
-        { title:"M15", mcqQuestion:"What is the HCF of the smallest prime and the smallest odd prime?", mcqOptions:["1","2","3","6"], mcqCorrectIndex:0, mcqExplanation:"Smallest prime = 2 (even prime). Smallest odd prime = 3. HCF(2, 3): 2 = 1×2+0... 2 and 3 share no common factors (both are prime and distinct). HCF = 1. They are co-prime." },
-      ].forEach((q,i) => resources.push({ chapterId:ch1._id, type:"mcq", testLevel:"medium", order:i+1, ...q }));
+// ─────────────────────────────────────────────────────────
+// MATHS SEED — Class 10 CBSE
+// Run: node seeders/mathSeed.js
+// Chapters must already exist in DB (run main seed.js first)
+// ─────────────────────────────────────────────────────────
 
-      // HARD MCQs
-      [
-        { title:"H1", mcqQuestion:"If n is a natural number, then 9ⁿ − 5ⁿ is always divisible by:", mcqOptions:["4","8","16","Both 4 and 8 for even n"], mcqCorrectIndex:0, mcqExplanation:"9ⁿ − 5ⁿ = (5+4)ⁿ − 5ⁿ. By binomial theorem: 9ⁿ = (5+4)ⁿ = 5ⁿ + n×5ⁿ⁻¹×4 + ... (all terms after first have factor 4). So 9ⁿ − 5ⁿ = 4k for some integer k → divisible by 4. Check: n=1: 9−5=4 ✓. n=2: 81−25=56=4×14 ✓. Not always divisible by 8: n=1 gives 4, not divisible by 8." },
-        { title:"H2", mcqQuestion:"How many numbers lie between 11² and 12² that have exactly three factors?", mcqOptions:["1","2","0","3"], mcqCorrectIndex:0, mcqExplanation:"11²=121, 12²=144. Numbers between 121 and 144 (exclusive): 122 to 143. A number has exactly 3 factors iff it is the square of a prime (p²: factors are 1, p, p²). Primes p with 122 < p² < 144: p=11 gives 121 (excluded), p=12 not prime, p=13 gives 169 (>144). So no p² lies strictly between 121 and 144. Wait: between 121 and 144, the only perfect square is 144=12²=excluded. Numbers with exactly 3 factors IN this range: check if any p² lies in (121,144): 121=11² (excluded), 169=13² (>144). Answer: 0 numbers. Hmm but option A says 1. Let me check again... 11²=121 not included; next is 13²=169. So answer: 0 ✓ (option C)." },
-        { title:"H3", mcqQuestion:"The largest number that divides 2053 and 967 leaving the same remainder is:", mcqOptions:["37","19","7","181"], mcqCorrectIndex:0, mcqExplanation:"If a number d divides 2053 and 967 leaving the same remainder r, then d divides their difference: 2053 − 967 = 1086. So d | 1086. Also check if both give same remainder: 1086 = 2 × 3 × 181. Try d=181: 2053 = 181×11+42; 967=181×5+42. Same remainder 42 ✓. Try d=1086: 2053=1086×1+967; 967=1086×0+967. Same remainder... largest d = HCF(2053,967). 2053=967×2+119; 967=119×8+15; 119=15×7+14; 15=14×1+1; 14=1×14. HCF=1. So d | (2053−967) only means d | 1086. Largest: 1086? Check: 2053=1086×1+967; 967=1086×0+967. Remainders 967 and 967 — same! Answer could be 1086 but that's not in options. 37: 1086=37×... hmm. Standard CBSE answer: 37." },
-        { title:"H4", mcqQuestion:"If p = 2 × 3 × 5 × 7 × 11 × 13 + 7, then p is:", mcqOptions:["Divisible by 7 only","Prime","Composite, divisible by 7","Divisible by 11 only"], mcqCorrectIndex:2, mcqExplanation:"p = 2×3×5×7×11×13 + 7 = 7(2×3×5×11×13 + 1) = 7(4290 + 1) = 7 × 4291. So p is divisible by 7. Is 4291 prime? 4291 ÷ 13 = 330.08... Let's check: 4291 = 13 × 330 + 1, not divisible. Try 7: 4291/7=613 → 7×613=4291 ✓. So p = 7 × 7 × 613 = 49 × 613. p is composite. Divisible by 7 (and in fact by 49)." },
-        { title:"H5", mcqQuestion:"For what value of n does 4ⁿ end in 6?", mcqOptions:["All even n","All odd n","All n ≥ 1","n = 2 only"], mcqCorrectIndex:0, mcqExplanation:"Powers of 4: 4¹=4, 4²=16, 4³=64, 4⁴=256, 4⁵=1024. Units digits: 4, 6, 4, 6, 4... Pattern: odd powers end in 4, EVEN powers end in 6. So 4ⁿ ends in 6 for ALL EVEN values of n. This is because 4² = 16 ends in 6, and multiplying by 4² = 16 again always gives units digit 6 (6 × 6 = 36 → 6)." },
-        { title:"H6", mcqQuestion:"The number of prime factors in 2² × 3³ × 5² × 7 is:", mcqOptions:["8","4","2","10"], mcqCorrectIndex:1, mcqExplanation:"The number of DISTINCT prime factors = 4 (the primes are 2, 3, 5, 7). The total number of prime factors INCLUDING repetition = 2+3+2+1 = 8. CBSE typically asks for distinct prime factors = 4. Note the distinction: 'prime factors' vs 'total prime factors (with repetition)'." },
-        { title:"H7", mcqQuestion:"The LCM of two coprime numbers a and b is 117. Then a + b cannot be:", mcqOptions:["118","38","14","40"], mcqCorrectIndex:2, mcqExplanation:"117 = 3² × 13. If HCF(a,b)=1, then LCM=a×b=117. Factor pairs of 117: (1,117), (9,13). a+b can be: 1+117=118, 9+13=22... wait 9+13=22. So a+b ∈ {118, 22}. None of these equal 38, 14, or 40. The answer that CAN'T be a+b includes 38, 14, 40 — but we need which 'cannot' be. Since possible values are only 22 and 118: all of 38, 14, 40 cannot be a+b. Standard CBSE answer picks one — 14 is the most clearly wrong." },
-        { title:"H8", mcqQuestion:"Which of these cannot be the HCF of two numbers whose LCM is 780?", mcqOptions:["30","65","60","130"], mcqCorrectIndex:2, mcqExplanation:"For HCF to be valid, HCF must DIVIDE LCM. 780 = 2²×3×5×13. Check each option: 30=2×3×5 — divides 780 ✓; 65=5×13 — divides 780 ✓; 60=2²×3×5 — divides 780? 780/60=13 ✓; 130=2×5×13 — 780/130=6 ✓. All divide 780. So this question as stated doesn't have a clean answer unless checking: HCF must also satisfy HCF ≤ √LCM for at least one pair. Actually HCF always divides LCM. Need more context. Standard answer: 60." },
-        { title:"H9", mcqQuestion:"If 3 divides n, 3 divides m, prove that 3 divides (m² + n²). This is an example of:", mcqOptions:["Fundamental Theorem","Euclid's Lemma applied to composites","Direct proof by divisibility","Proof by contradiction"], mcqCorrectIndex:2, mcqExplanation:"Direct proof: 3|n → n=3a; 3|m → m=3b. m²+n²=(3b)²+(3a)²=9b²+9a²=9(a²+b²)=3×3(a²+b²). Since 3|9(a²+b²), we have 3|(m²+n²). This is a DIRECT PROOF BY DIVISIBILITY — starting from the given conditions and algebraically showing the conclusion. No contradiction needed." },
-        { title:"H10", mcqQuestion:"The decimal 1.232323... can be expressed as p/q. The value of p + q (when p/q is in lowest terms) is:", mcqOptions:["144","121","122","143"], mcqCorrectIndex:2, mcqExplanation:"x = 1.232323... 100x = 123.2323... 100x − x = 122 → 99x = 122 → x = 122/99. Check HCF(122,99): 122=2×61, 99=3²×11 → HCF=1 (already lowest terms). p+q = 122+99 = 221. Hmm — not in options. Recheck: x=1.2̄3̄: 100x=123.23..., subtract: 99x=122, x=122/99. p+q=221. Options don't match. Standard CBSE: p=122, q=99, p+q=221. Answer closest: none — likely (C) 122 refers to numerator only." },
-        { title:"H11", mcqQuestion:"Show 5n cannot end in 0. This is because 5ⁿ has which prime factors?", mcqOptions:["Only 5 — no factor of 2, so cannot be divisible by 10","Only 2 and 5","2, 5 and 3","None"], mcqCorrectIndex:0, mcqExplanation:"5ⁿ = 5 × 5 × ... (n times). The ONLY prime factor of 5ⁿ is 5. For a number to end in 0, it must be divisible by 10 = 2 × 5. So it must have 2 as a prime factor. Since 5ⁿ has no factor of 2, it can NEVER end in 0. The last digit of 5ⁿ is always 5 (for n ≥ 1)." },
-        { title:"H12", mcqQuestion:"If a = 5 × 7 × 11 × 17 + 1, then a is:", mcqOptions:["Prime","Divisible by 11","Composite — not divisible by 5, 7, 11, or 17 individually but is composite","An odd number but prime"], mcqCorrectIndex:2, mcqExplanation:"a = 5×7×11×17 + 1. Is it prime? Check: a = 6545 + 1 = 6546. 6546 = 2 × 3273 = 2 × 3 × 1091. So it's divisible by 2 and 3 — composite. It is NOT divisible by 5, 7, 11, or 17 individually (since dividing by any of these leaves remainder 1 from the product term, plus 1 = 2, not 0). It IS composite (divisible by 2 and 3)." },
-        { title:"H13", mcqQuestion:"The remainder when 2²⁰ is divided by 5 is:", mcqOptions:["1","2","4","0"], mcqCorrectIndex:0, mcqExplanation:"Powers of 2 mod 5: 2¹=2, 2²=4, 2³=3, 2⁴=1, 2⁵=2... (cycle of 4). 20 = 4×5, so 2²⁰ = (2⁴)⁵ = 16⁵ ≡ 1⁵ = 1 (mod 5). Remainder = 1. Alternatively: 2⁴=16≡1(mod5), so 2²⁰=(2⁴)⁵≡1⁵=1(mod5)." },
-        { title:"H14", mcqQuestion:"For what value of k will the system of equations kx + 3y = k−3 and 12x + ky = k have infinitely many solutions? [This is a Real Numbers application — the answer involves HCF/LCM concepts.]", mcqOptions:["k=6","k=−6","k=±6","k=12"], mcqCorrectIndex:2, mcqExplanation:"For infinitely many solutions: a₁/a₂ = b₁/b₂ = c₁/c₂. k/12 = 3/k = (k−3)/k. From k/12 = 3/k: k² = 36 → k = ±6. Check c ratio for k=6: 3/6 = 3/6 → (k−3)/k = 3/6 ✓. For k=−6: (−6−3)/(−6)=9/6=3/2 but 3/k=3/(−6)=−1/2 ≠ 3/2 ✗. So only k=6 works for infinitely many solutions. But the option says ±6 — standard answer k=6." },
-        { title:"H15", mcqQuestion:"There are 156, 208, and 260 students in three sections. Find the minimum number of rooms required if each room has the same maximum number of students (no room is mixed between sections).", mcqOptions:["3","12","13","15"], mcqCorrectIndex:2, mcqExplanation:"We need HCF(156, 208, 260) for the room size, then total rooms = sum of (section size / HCF). 156=2²×3×13; 208=2⁴×13; 260=2²×5×13. HCF = 2²×13 = 52. Rooms: 156/52 + 208/52 + 260/52 = 3 + 4 + 5 = 12 rooms... Hmm option B=12. But some list answer as 13. With HCF=52: 3+4+5=12. Answer: 12 rooms (B)." },
-      ].forEach((q,i) => resources.push({ chapterId:ch1._id, type:"mcq", testLevel:"hard", order:i+1, ...q }));
+const seedMaths = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ Connected to MongoDB");
+
+    // ── Find all math chapters ──────────────────────────
+    const chapterSlugs = [
+      "real-numbers",
+      "polynomials",
+      "pair-of-linear-equations",
+      "quadratic-equations",
+      "arithmetic-progressions",
+      "triangles",
+      "coordinate-geometry",
+      "introduction-to-trigonometry",
+      "applications-of-trigonometry",
+      "circles",
+      "areas-related-to-circles",
+      "surface-areas-and-volumes",
+      "statistics",
+      "probability",
+    ];
+
+    const chapters = await Chapter.find({ slug: { $in: chapterSlugs } });
+
+    if (!chapters.length) {
+      console.error("❌ No math chapters found. Run node seed.js first.");
+      process.exit(1);
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // CH 2 — POLYNOMIALS
-    // ═══════════════════════════════════════════════════════════════
-    const ch2 = chapterMap["polynomials"];
+    console.log(`📚 Found ${chapters.length} chapters`);
+
+    // Build slug → chapter object map
+    const chapterMap = {};
+    chapters.forEach((c) => { chapterMap[c.slug] = c; });
+
+    // ── Clear existing resources + formulas for these chapters ──
+    const chapterIds = chapters.map((c) => c._id);
+    await Resource.deleteMany({ chapterId: { $in: chapterIds } });
+    await Formula.deleteMany({ chapterId: { $in: chapterIds } });
+    console.log("🗑️  Cleared existing data for math chapters");
+
+    // ── Build arrays ────────────────────────────────────
+    const resources = [];
+    const formulas  = [];
+
+    // ═══════════════════════════════════════════════════
+    // CH 1 — REAL NUMBERS
+    // ═══════════════════════════════════════════════════
+    const ch1 = chapterMap["real-numbers"];
+    if (ch1) {
+
+      // ── Formulas ──────────────────────────────────────
+      const fb = {
+        chapterId:   ch1._id,
+        subject:     "Mathematics",
+        classLevel:  10,
+        chapterName: "Real Numbers",
+      };
+
+      formulas.push(
+        {
+          ...fb, order: 1, isKeyFormula: true,
+          title:       "Euclid's Division Lemma",
+          formula:     "a = bq + r,  0 ≤ r < b",
+          description: "For any two positive integers a and b, there exist unique integers q (quotient) and r (remainder) such that a = bq + r.",
+          variables: [
+            { symbol: "a", meaning: "Dividend" },
+            { symbol: "b", meaning: "Divisor (b > 0)" },
+            { symbol: "q", meaning: "Quotient" },
+            { symbol: "r", meaning: "Remainder (0 ≤ r < b)" },
+          ],
+          example:  "135 = 6 × 22 + 3",
+          category: "Division Lemma",
+        },
+        {
+          ...fb, order: 2, isKeyFormula: true,
+          title:       "HCF × LCM = Product of Two Numbers",
+          formula:     "HCF(a,b) × LCM(a,b) = a × b",
+          description: "For any two positive integers a and b, the product of their HCF and LCM equals the product of the numbers.",
+          example:     "a=12, b=18 → HCF=6, LCM=36. 6×36=216=12×18 ✓",
+          category:    "HCF and LCM",
+        },
+        {
+          ...fb, order: 3, isKeyFormula: false,
+          title:       "Terminating Decimal Condition",
+          formula:     "p/q terminates ⟺ q = 2ⁿ × 5ᵐ (in lowest terms)",
+          description: "A rational number p/q (in lowest terms) has a terminating decimal if and only if q has no prime factors other than 2 and 5.",
+          example:     "7/40: 40=2³×5 → terminates. 7/12: 12=2²×3 → non-terminating repeating",
+          category:    "Decimal Expansion",
+        },
+        {
+          ...fb, order: 4, isKeyFormula: false,
+          title:       "Irrational Numbers",
+          formula:     "√2, √3, √5, π are irrational",
+          description: "Proof by contradiction: Assume √2 = p/q in lowest terms → p² = 2q² → p is even → p=2m → q is also even → contradicts lowest terms → √2 is irrational.",
+          category:    "Irrational Numbers",
+        }
+      );
+
+      // ── PYQs ──────────────────────────────────────────
+      const pyqs = [
+        {
+          title:      "PYQ 2023 — HCF and LCM",
+          question:   "Find the HCF and LCM of 306 and 657 using prime factorisation. Verify: HCF × LCM = Product of the two numbers.",
+          answer:     "Prime factorisation:\n306 = 2 × 3² × 17\n657 = 3² × 73\n\nHCF = 3² = 9\nLCM = 2 × 3² × 17 × 73 = 22338\n\nVerification:\nHCF × LCM = 9 × 22338 = 201042\na × b = 306 × 657 = 201042 ✓",
+          year:       2023, marks: 3, difficulty: "medium", order: 1,
+        },
+        {
+          title:      "PYQ 2022 — Euclid's Division Lemma",
+          question:   "Use Euclid's division algorithm to find the HCF of 135 and 225.",
+          answer:     "Step 1: 225 = 135 × 1 + 90\nStep 2: 135 = 90 × 1 + 45\nStep 3: 90 = 45 × 2 + 0\n\nRemainder = 0, so HCF = 45",
+          year:       2022, marks: 3, difficulty: "medium", order: 2,
+        },
+        {
+          title:      "PYQ 2023 — Prove √5 Irrational",
+          question:   "Prove that √5 is irrational.",
+          answer:     "Assume √5 = p/q (co-prime, q≠0).\n5 = p²/q² → p² = 5q² → 5|p → p=5m\n→ 25m² = 5q² → q² = 5m² → 5|q\n→ Both p,q divisible by 5 — contradicts co-prime.\n∴ √5 is irrational. ■",
+          year:       2023, marks: 3, difficulty: "hard", order: 3,
+        },
+        {
+          title:      "PYQ 2022 — Decimal Expansion",
+          question:   "State whether the following have terminating or non-terminating repeating decimal: (i) 13/3125  (ii) 17/8  (iii) 23/75",
+          answer:     "(i) 3125 = 5⁵ → TERMINATING\n(ii) 8 = 2³ → TERMINATING (= 2.125)\n(iii) 75 = 3×5² → contains 3 → NON-TERMINATING REPEATING",
+          year:       2022, marks: 3, difficulty: "medium", order: 4,
+        },
+        {
+          title:      "PYQ 2021 — Prove 3+2√5 Irrational",
+          question:   "Prove that 3 + 2√5 is irrational.",
+          answer:     "Assume 3+2√5 = p/q (rational)\n→ √5 = (p−3q)/2q = rational\n→ Contradicts that √5 is irrational.\n∴ 3+2√5 is irrational. ■",
+          year:       2021, marks: 3, difficulty: "hard", order: 5,
+        },
+        {
+          title:      "PYQ 2020 — HCF of 867 and 255",
+          question:   "Find the HCF of 867 and 255 using Euclid's division algorithm.",
+          answer:     "867 = 255×3 + 102\n255 = 102×2 + 51\n102 = 51×2 + 0\n\nHCF = 51",
+          year:       2020, marks: 3, difficulty: "medium", order: 6,
+        },
+        {
+          title:      "PYQ 2019 — LCM of Three Numbers",
+          question:   "Find the LCM of 12, 15, and 21 using prime factorisation.",
+          answer:     "12 = 2²×3,  15 = 3×5,  21 = 3×7\nLCM = 2²×3×5×7 = 420",
+          year:       2019, marks: 2, difficulty: "easy", order: 7,
+        },
+        {
+          title:      "PYQ 2023 — Prove 5+3√2 Irrational",
+          question:   "Given that √2 is irrational, prove that 5+3√2 is irrational.",
+          answer:     "Assume 5+3√2 = p/q\n→ √2 = (p−5q)/3q = rational\n→ Contradicts √2 being irrational.\n∴ 5+3√2 is irrational. ■",
+          year:       2023, marks: 2, difficulty: "medium", order: 8,
+        },
+        {
+          title:      "PYQ 2022 — Three Bells Application",
+          question:   "Three bells ring at intervals of 6, 12, 18 minutes. They ring together at 12 noon. When will they next ring together?",
+          answer:     "LCM(6,12,18):\n6=2×3, 12=2²×3, 18=2×3²\nLCM = 2²×3² = 36 minutes\n12:00 + 36 min = 12:36 PM",
+          year:       2022, marks: 2, difficulty: "easy", order: 9,
+        },
+        {
+          title:      "PYQ 2021 — Decimal of 77/210",
+          question:   "What type of decimal expansion does 77/210 have? Justify.",
+          answer:     "77/210 = 11/30 (HCF=7)\n30 = 2×3×5 → contains prime factor 3\n∴ NON-TERMINATING REPEATING\n11/30 = 0.3666... = 0.36̄",
+          year:       2021, marks: 2, difficulty: "easy", order: 10,
+        },
+        {
+          title:      "PYQ 2020 — Prove √3 Irrational",
+          question:   "Prove that √3 is irrational. Hence show 4+√3 is irrational.",
+          answer:     "Part 1: Assume √3=p/q (co-prime). p²=3q² → 3|p → p=3k → q²=3k² → 3|q. Contradiction. ∴√3 irrational.\nPart 2: If 4+√3 rational → √3 = (4+√3)−4 = rational. Contradiction. ∴ 4+√3 irrational. ■",
+          year:       2020, marks: 5, difficulty: "hard", order: 11,
+        },
+        {
+          title:      "PYQ 2019 — Odd Integer Form",
+          question:   "Show that any positive odd integer is of the form 6q+1, 6q+3 or 6q+5.",
+          answer:     "By Euclid's Lemma: a = 6q+r where r ∈ {0,1,2,3,4,5}\nEven: 6q, 6q+2, 6q+4\nOdd: 6q+1, 6q+3, 6q+5 ✓",
+          year:       2019, marks: 3, difficulty: "hard", order: 12,
+        },
+        {
+          title:      "PYQ 2018 — Fundamental Theorem",
+          question:   "Explain the Fundamental Theorem of Arithmetic with an example.",
+          answer:     "Every composite number can be expressed as a product of primes UNIQUELY (except order).\nExample: 360 = 2³ × 3² × 5\nThis factorisation is always the same regardless of method.",
+          year:       2018, marks: 2, difficulty: "easy", order: 13,
+        },
+        {
+          title:      "PYQ 2023 — HCF from Product",
+          question:   "If HCF(a,b) = 4 and a×b = 3600, find LCM(a,b).",
+          answer:     "HCF × LCM = a × b\n4 × LCM = 3600\nLCM = 900",
+          year:       2023, marks: 1, difficulty: "easy", order: 14,
+        },
+        {
+          title:      "PYQ 2022 — n²−n Divisible by 2",
+          question:   "Prove that n²−n is divisible by 2 for every positive integer n.",
+          answer:     "n²−n = n(n−1) = product of two consecutive integers.\nOne of n or (n−1) is always even.\n∴ n(n−1) always divisible by 2. ■",
+          year:       2022, marks: 2, difficulty: "medium", order: 15,
+        },
+      ];
+
+      pyqs.forEach((q) => {
+        resources.push({ chapterId: ch1._id, type: "pyq", ...q });
+      });
+
+      // ── Easy MCQs ─────────────────────────────────────
+      const easyMCQs = [
+        { mcqQuestion: "The HCF of 96 and 404 is:", mcqOptions: ["4","8","2","16"], mcqCorrectIndex: 0, mcqExplanation: "96=2⁵×3, 404=2²×101. HCF = lowest power of common primes = 2² = 4." },
+        { mcqQuestion: "The decimal expansion of 13/3125 is:", mcqOptions: ["Non-terminating repeating","Terminating","Non-terminating non-repeating","Cannot be determined"], mcqCorrectIndex: 1, mcqExplanation: "3125 = 5⁵. Denominator has only 5 as prime factor → TERMINATING. 13/3125 = 0.00416." },
+        { mcqQuestion: "If HCF(a,b)=12 and a×b=1800, then LCM(a,b) is:", mcqOptions: ["150","12","21600","1800"], mcqCorrectIndex: 0, mcqExplanation: "HCF × LCM = a×b → 12 × LCM = 1800 → LCM = 150." },
+        { mcqQuestion: "Which of the following is irrational?", mcqOptions: ["√4","√(9/4)","√7","0.25"], mcqCorrectIndex: 2, mcqExplanation: "√4=2 (rational), √(9/4)=3/2 (rational), 0.25=1/4 (rational). √7 is irrational since 7 is not a perfect square." },
+        { mcqQuestion: "Every composite number can be expressed as a product of primes in how many ways?", mcqOptions: ["Only one way (unique)","Two ways","Many ways","Depends on the number"], mcqCorrectIndex: 0, mcqExplanation: "Fundamental Theorem of Arithmetic: every composite number has a UNIQUE prime factorisation (except order of factors)." },
+        { mcqQuestion: "The prime factorisation of 3825 is:", mcqOptions: ["3×5²×51","3²×5²×17","3×5×255","3²×425"], mcqCorrectIndex: 1, mcqExplanation: "3825 ÷ 5 = 765 ÷ 5 = 153 ÷ 3 = 51 ÷ 3 = 17. So 3825 = 3²×5²×17. Verify: 9×25×17=3825 ✓." },
+        { mcqQuestion: "Which of these represents the form of any odd integer?", mcqOptions: ["2q","2q+1","2q−1 only","3q+1"], mcqCorrectIndex: 1, mcqExplanation: "By Euclid with b=2: a=2q+r where r∈{0,1}. r=0→even, r=1→2q+1 (odd). All odd integers have this form." },
+        { mcqQuestion: "If 6ⁿ ends with digit 0, then n is:", mcqOptions: ["Any even number","Any odd number","There is no such n","Only n=6"], mcqCorrectIndex: 2, mcqExplanation: "6ⁿ=2ⁿ×3ⁿ. To end in 0 needs factor 5. But 6ⁿ has no factor of 5. So 6ⁿ NEVER ends in 0 for any n." },
+        { mcqQuestion: "LCM(a,b) × HCF(a,b) = ?", mcqOptions: ["a+b","a−b","a×b","a÷b"], mcqCorrectIndex: 2, mcqExplanation: "Standard result: HCF(a,b) × LCM(a,b) = a × b. Works only for two numbers." },
+        { mcqQuestion: "The rational number p/q has a terminating decimal if q is of the form:", mcqOptions: ["2ⁿ×3ᵐ","2ⁿ×5ᵐ","3ⁿ×5ᵐ","5ⁿ×7ᵐ"], mcqCorrectIndex: 1, mcqExplanation: "Denominator must be of the form 2ⁿ×5ᵐ only. Because 10=2×5, fractions with only 2s and 5s in denominator can be converted to powers of 10." },
+        { mcqQuestion: "What is the LCM of 23 and 29?", mcqOptions: ["1","23","29","667"], mcqCorrectIndex: 3, mcqExplanation: "Both 23 and 29 are prime → HCF=1 → LCM = 23×29 = 667." },
+        { mcqQuestion: "If HCF(a,b)=4 and a×b=3600, LCM(a,b)=?", mcqOptions: ["900","400","1800","3600"], mcqCorrectIndex: 0, mcqExplanation: "4 × LCM = 3600 → LCM = 900." },
+        { mcqQuestion: "The number of decimal places after which 23/(2²×5) terminates:", mcqOptions: ["1","2","3","4"], mcqCorrectIndex: 1, mcqExplanation: "23/20. Multiply by 5/5: 115/100 = 1.15. Terminates after 2 decimal places. Rule: max(power of 2, power of 5) in denominator." },
+        { mcqQuestion: "HCF of two consecutive integers is always:", mcqOptions: ["2","0","1","The smaller number"], mcqCorrectIndex: 2, mcqExplanation: "Consecutive integers are always co-prime. If d|n and d|(n+1) → d|(n+1−n)=d|1 → d=1." },
+        { mcqQuestion: "The largest number that divides 70 and 125 leaving remainders 5 and 8 respectively:", mcqOptions: ["13","65","875","1750"], mcqCorrectIndex: 0, mcqExplanation: "HCF(70−5, 125−8) = HCF(65,117). 65=5×13, 117=9×13. HCF=13. Check: 70=13×5+5 ✓, 125=13×9+8 ✓." },
+      ];
+
+      easyMCQs.forEach((q, i) => {
+        resources.push({
+          chapterId:       ch1._id,
+          type:            "mcq",
+          testLevel:       "easy",
+          title:           `Easy MCQ Q${i + 1}`,
+          order:           i + 1,
+          mcqQuestion:     q.mcqQuestion,
+          mcqOptions:      q.mcqOptions,
+          mcqCorrectIndex: q.mcqCorrectIndex,
+          mcqExplanation:  q.mcqExplanation,
+        });
+      });
+
+      // ── Medium MCQs ───────────────────────────────────
+      const mediumMCQs = [
+        { mcqQuestion: "The HCF of two numbers is 18 and their LCM is 378. If one number is 54, the other is:", mcqOptions: ["126","252","36","108"], mcqCorrectIndex: 0, mcqExplanation: "18×378=54×b → b=6804/54=126. Check HCF(54,126)=18, LCM(54,126)=378 ✓." },
+        { mcqQuestion: "After how many decimal places does 47/(2³×5²) terminate?", mcqOptions: ["2","3","4","5"], mcqCorrectIndex: 1, mcqExplanation: "Multiply by 5: 47×5/(2³×5³) = 235/1000 = 0.235. Terminates after 3 decimal places = max(3,2)." },
+        { mcqQuestion: "If the LCM of 12 and 42 is 10m+4, then m is:", mcqOptions: ["1","2","8","12"], mcqCorrectIndex: 2, mcqExplanation: "LCM(12,42)=84. 10m+4=84 → m=8." },
+        { mcqQuestion: "n²+n is always divisible by 2 because:", mcqOptions: ["n² is always even","n is always even","n(n+1) is product of consecutive integers — always even","n²−n is divisible by 2"], mcqCorrectIndex: 2, mcqExplanation: "n(n+1) = product of consecutive integers. One is always even → product divisible by 2." },
+        { mcqQuestion: "LCM of smallest prime and smallest composite number:", mcqOptions: ["2","4","6","8"], mcqCorrectIndex: 1, mcqExplanation: "Smallest prime=2, smallest composite=4. LCM(2,4)=4." },
+        { mcqQuestion: "Two numbers with HCF=1 are called:", mcqOptions: ["Both prime","Both even","Co-prime","Consecutive integers only"], mcqCorrectIndex: 2, mcqExplanation: "Numbers with HCF=1 are CO-PRIME (relatively prime). They need not be prime themselves." },
+        { mcqQuestion: "0.372372... expressed as p/q is:", mcqOptions: ["372/999","372/1000","372/99","37/99"], mcqCorrectIndex: 0, mcqExplanation: "x=0.372372... 1000x=372.372... 999x=372 → x=372/999=124/333." },
+        { mcqQuestion: "Product of two consecutive positive integers is always divisible by:", mcqOptions: ["2 only","3 only","Both 2 and 3","6 always"], mcqCorrectIndex: 0, mcqExplanation: "n(n+1): always divisible by 2. Not always by 3 (e.g. 4×5=20). Answer: 2 only." },
+        { mcqQuestion: "If p and q are consecutive natural numbers, HCF(p,q)=?", mcqOptions: ["p","q","1","pq"], mcqCorrectIndex: 2, mcqExplanation: "d|p and d|q → d|(q−p)=1 → d=1. Consecutive integers are always co-prime." },
+        { mcqQuestion: "0.2353535... expressed as p/q (lowest terms):", mcqOptions: ["235/999","233/990","7/30","23/99"], mcqCorrectIndex: 1, mcqExplanation: "10x=2.3535... 1000x=235.3535... 990x=233 → x=233/990. HCF(233,990)=1 ✓." },
+        { mcqQuestion: "3×7×11×13+13 is:", mcqOptions: ["Prime","Composite","Neither","1"], mcqCorrectIndex: 1, mcqExplanation: "=13(3×7×11+1)=13×232=13×8×29. Has factors beyond 1 and itself → COMPOSITE." },
+        { mcqQuestion: "The decimal expansion of a rational number is always:", mcqOptions: ["Terminating","Non-terminating repeating","Either terminating OR non-terminating repeating","Non-terminating non-repeating"], mcqCorrectIndex: 2, mcqExplanation: "Every rational p/q either terminates (q=2ⁿ5ᵐ) or repeats. Non-terminating non-repeating = irrational." },
+        { mcqQuestion: "HCF of smallest prime and smallest odd prime:", mcqOptions: ["1","2","3","6"], mcqCorrectIndex: 0, mcqExplanation: "Smallest prime=2, smallest odd prime=3. HCF(2,3)=1 (both prime, different)." },
+        { mcqQuestion: "If a=2³×3×5² and b=2×3³×5²×7, then LCM(a,b)/HCF(a,b):", mcqOptions: ["2²×3²×7","2³×3³×5²×7","2³×3×5²","2²×3²×5×7"], mcqCorrectIndex: 0, mcqExplanation: "HCF=2¹×3¹×5², LCM=2³×3³×5²×7. LCM/HCF = 2²×3²×7 = 252." },
+        { mcqQuestion: "p = 2×3×5×7×11×13+7. Then p is:", mcqOptions: ["Divisible by 7 only","Prime","Composite, divisible by 7","Divisible by 11 only"], mcqCorrectIndex: 2, mcqExplanation: "=7(2×3×5×11×13+1)=7×4291. So divisible by 7 and composite." },
+      ];
+
+      mediumMCQs.forEach((q, i) => {
+        resources.push({
+          chapterId:       ch1._id,
+          type:            "mcq",
+          testLevel:       "medium",
+          title:           `Medium MCQ Q${i + 1}`,
+          order:           i + 1,
+          mcqQuestion:     q.mcqQuestion,
+          mcqOptions:      q.mcqOptions,
+          mcqCorrectIndex: q.mcqCorrectIndex,
+          mcqExplanation:  q.mcqExplanation,
+        });
+      });
+
+      // ── Hard MCQs ─────────────────────────────────────
+      const hardMCQs = [
+        { mcqQuestion: "If n is a natural number, 9ⁿ−5ⁿ is always divisible by:", mcqOptions: ["4","8","16","Both 4 and 8 for even n"], mcqCorrectIndex: 0, mcqExplanation: "9ⁿ=(5+4)ⁿ=5ⁿ+n×5ⁿ⁻¹×4+... All extra terms have factor 4. So 9ⁿ−5ⁿ=4k. Check: n=1: 4 ✓, n=2: 56=4×14 ✓. Not always divisible by 8." },
+        { mcqQuestion: "If p=2×3×5×7×11×13+7, then p is divisible by:", mcqOptions: ["Only 7","Only 2","7 and is composite","All of 2,3,5,7,11,13"], mcqCorrectIndex: 2, mcqExplanation: "p=7(2×3×5×11×13+1)=7×4291. Composite and divisible by 7. Not divisible by 2,3,5,11,13 individually (remainder 1 each time)." },
+        { mcqQuestion: "For what values of n does 4ⁿ end in 6?", mcqOptions: ["All even n","All odd n","All n≥1","n=2 only"], mcqCorrectIndex: 0, mcqExplanation: "4¹=4, 4²=16, 4³=64, 4⁴=256. Pattern: odd powers→4, even powers→6. 4ⁿ ends in 6 for ALL EVEN n." },
+        { mcqQuestion: "The largest number dividing 2053 and 967 leaving same remainder is:", mcqOptions: ["37","19","7","181"], mcqCorrectIndex: 0, mcqExplanation: "If d|both with same remainder → d|(2053−967)=d|1086. 1086=2×3×181. Try d=181: 2053=181×11+42; 967=181×5+42. Same remainder ✓." },
+        { mcqQuestion: "How many numbers between 11² and 12² have exactly 3 factors?", mcqOptions: ["1","2","0","3"], mcqCorrectIndex: 2, mcqExplanation: "Numbers with exactly 3 factors are squares of primes (p²). 11²=121, 12²=144. Need p² strictly between 121 and 144. 11²=121 (excluded), 13²=169>144. So ZERO numbers." },
+        { mcqQuestion: "The number of prime factors in 2²×3³×5²×7 is:", mcqOptions: ["8","4","2","10"], mcqCorrectIndex: 1, mcqExplanation: "Number of DISTINCT prime factors = 4 (the primes 2,3,5,7). Total with repetition = 2+3+2+1=8. CBSE asks distinct = 4." },
+        { mcqQuestion: "Which CANNOT be the HCF of two numbers whose LCM is 780?", mcqOptions: ["30","65","60","124"], mcqCorrectIndex: 3, mcqExplanation: "HCF must divide LCM. 780=2²×3×5×13. Check: 30=2×3×5 ✓, 65=5×13 ✓, 60=2²×3×5 ✓. 124=4×31 — does 31 divide 780? 780/31=25.16... No! 31 is not a factor of 780. So HCF=124 is IMPOSSIBLE." },
+        { mcqQuestion: "Prove that 3|n and 3|m implies 3|(m²+n²). This is a:", mcqOptions: ["Proof by contradiction","Euclid's Lemma","Direct proof by divisibility","Fundamental Theorem application"], mcqCorrectIndex: 2, mcqExplanation: "n=3a, m=3b → m²+n²=9a²+9b²=3(3a²+3b²). Direct algebraic proof. No contradiction needed." },
+        { mcqQuestion: "The remainder when 2²⁰ is divided by 5:", mcqOptions: ["1","2","4","0"], mcqCorrectIndex: 0, mcqExplanation: "Powers of 2 mod 5 cycle: 2,4,3,1,2,4,3,1... (period 4). 20÷4=5 remainder 0 → use 4th in cycle = 1. So 2²⁰ ≡ 1 (mod 5)." },
+        { mcqQuestion: "1.232323... = 1.2̄3̄ expressed as p/q in lowest terms, then p+q:", mcqOptions: ["221","122","99","200"], mcqCorrectIndex: 0, mcqExplanation: "x=1.232323... 100x=123.2323... 99x=122 → x=122/99. HCF(122,99)=1. p+q=122+99=221." },
+        { mcqQuestion: "Show 5ⁿ cannot end in 0. This is because:", mcqOptions: ["5ⁿ has only factor 5 — no factor of 2, so not divisible by 10","5ⁿ is always odd","5ⁿ ends in 5 randomly","5ⁿ is prime"], mcqCorrectIndex: 0, mcqExplanation: "5ⁿ=5×5×...×5. Only prime factor is 5. For last digit 0, need factor 2×5=10. No factor of 2 → never ends in 0. Last digit of 5ⁿ is always 5." },
+        { mcqQuestion: "a=5×7×11×17+1 is:", mcqOptions: ["Prime","Divisible by 11","Composite — divisible by 2 and 3","An odd prime"], mcqCorrectIndex: 2, mcqExplanation: "a=6545+1=6546=2×3273=2×3×1091. Divisible by 2 and 3 → COMPOSITE. Not divisible by 5,7,11,17 (each leaves remainder 1)." },
+        { mcqQuestion: "There are 156, 208, 260 students in 3 sections. Minimum rooms if each room has same max capacity and no mixing:", mcqOptions: ["3","12","13","15"], mcqCorrectIndex: 1, mcqExplanation: "Room size = HCF(156,208,260). 156=2²×3×13, 208=2⁴×13, 260=2²×5×13. HCF=2²×13=52. Rooms=156/52+208/52+260/52=3+4+5=12." },
+        { mcqQuestion: "The LCM of two co-prime numbers a and b is 117. Then a+b CANNOT be:", mcqOptions: ["118","22","14","Both 14 and 40"], mcqCorrectIndex: 3, mcqExplanation: "117=3²×13. LCM of co-primes=a×b=117. Factor pairs: (1,117)→sum=118, (9,13)→sum=22. So possible sums: 118 and 22. Both 14 and 40 are impossible." },
+        { mcqQuestion: "n²−n is divisible by 2. For n=odd this works because:", mcqOptions: ["n² is odd so n²−n is even","(n−1) is even when n is odd — so n(n−1) divisible by 2","n is always divisible by 2","n²−n=0 for odd n"], mcqCorrectIndex: 1, mcqExplanation: "When n is odd, (n−1) is even. n(n−1) = odd × even = even. So divisible by 2. This is the direct reason." },
+      ];
+
+      hardMCQs.forEach((q, i) => {
+        resources.push({
+          chapterId:       ch1._id,
+          type:            "mcq",
+          testLevel:       "hard",
+          title:           `Hard MCQ Q${i + 1}`,
+          order:           i + 1,
+          mcqQuestion:     q.mcqQuestion,
+          mcqOptions:      q.mcqOptions,
+          mcqCorrectIndex: q.mcqCorrectIndex,
+          mcqExplanation:  q.mcqExplanation,
+        });
+      });
+
+    } // end ch1
+     const ch2 = chapterMap["polynomials"];
     if (ch2) {
       const fb = { chapterId:ch2._id, subject:"Mathematics", classLevel:10, chapterName:"Polynomials" };
       formulas.push(
@@ -5924,7 +6143,7 @@ if (ch13) {
         "For a given grouped frequency distribution, the less-than ogive plots cumulative frequency against upper class boundaries, and the more-than ogive plots cumulative frequency against lower class boundaries.\nThe point of intersection of less-than and more-than ogives corresponds to a value of x such that half of the total observations lie below it and half lie above it.\nTherefore, the x-coordinate of the point of intersection represents the median of the distribution.\nThis is because at the median, cumulative frequency from the left (less-than) and cumulative frequency from the right (more-than) both represent N/2 observations.",
       year: 2017,
       marks: 2,
-      difficulty: "conceptual",
+      difficulty: "medium",
       order: 15
     }
   ];
@@ -7053,3 +7272,65 @@ if (ch14) {
     resources.push({ chapterId: ch14._id, type: "mcq", testLevel: "hard", order: i + 1, ...q })
   );
 }
+
+    
+
+
+    // ═══════════════════════════════════════════════════
+    // ADD MORE CHAPTERS HERE following same pattern:
+    //
+    // const ch2 = chapterMap["polynomials"];
+    // if (ch2) {
+    //   const fb = { chapterId:ch2._id, subject:"Mathematics", classLevel:10, chapterName:"Polynomials" };
+    //   formulas.push({ ...fb, ... });
+    //   pyqs.forEach(q => resources.push({ chapterId:ch2._id, type:"pyq", ...q }));
+    //   easyMCQs.forEach((q,i) => resources.push({ chapterId:ch2._id, type:"mcq", testLevel:"easy", ...q }));
+    //   ...
+    // }
+    // ═══════════════════════════════════════════════════
+
+    // ── Insert everything ───────────────────────────────
+    let insertedResources = 0;
+    let insertedFormulas  = 0;
+
+    if (resources.length) {
+      const r = await Resource.insertMany(resources);
+      insertedResources = r.length;
+    }
+
+    if (formulas.length) {
+      const f = await Formula.insertMany(formulas);
+      insertedFormulas = f.length;
+    }
+
+    // ── Summary ─────────────────────────────────────────
+    console.log("\n✅ Maths seed complete");
+    console.log("─────────────────────────────────────────");
+    console.log(`Chapters found : ${chapters.length}`);
+    console.log(`Resources      : ${insertedResources}`);
+    console.log(`  PYQs         : ${resources.filter(r => r.type === "pyq").length}`);
+    console.log(`  Easy MCQs    : ${resources.filter(r => r.type === "mcq" && r.testLevel === "easy").length}`);
+    console.log(`  Medium MCQs  : ${resources.filter(r => r.type === "mcq" && r.testLevel === "medium").length}`);
+    console.log(`  Hard MCQs    : ${resources.filter(r => r.type === "mcq" && r.testLevel === "hard").length}`);
+    console.log(`Formulas       : ${insertedFormulas}`);
+    console.log("─────────────────────────────────────────");
+
+    process.exit(0);
+  } catch (err) {
+    console.error("❌ Seed failed:", err.message);
+    process.exit(1);
+  }
+};
+
+seedMaths();
+
+
+
+
+
+    // ═══════════════════════════════════════════════════════════════
+    // CH 1 — REAL NUMBERS
+
+
+
+

@@ -83,10 +83,10 @@ const chapters = [
   { title:"The Age of Industrialisation",          slug:"age-of-industrialisation",               subject:"Social Science", book:"History",   classLevel:10, chapterNumber:4 },
   { title:"Print Culture and the Modern World",    slug:"print-culture-and-the-modern-world",     subject:"Social Science", book:"History",   classLevel:10, chapterNumber:5 },
   // Geography - Contemporary India II
+  { title:"Agriculture",                           slug:"agriculture",                            subject:"Social Science", book:"Geography", classLevel:10, chapterNumber:4 },
   { title:"Resources and Development",             slug:"resources-and-development",              subject:"Social Science", book:"Geography", classLevel:10, chapterNumber:1 },
   { title:"Forest and Wildlife Resources",         slug:"forest-and-wildlife-resources",          subject:"Social Science", book:"Geography", classLevel:10, chapterNumber:2 },
   { title:"Water Resources",                       slug:"water-resources",                        subject:"Social Science", book:"Geography", classLevel:10, chapterNumber:3 },
-  { title:"Agriculture",                           slug:"agriculture",                            subject:"Social Science", book:"Geography", classLevel:10, chapterNumber:4 },
   { title:"Minerals and Energy Resources",         slug:"minerals-and-energy-resources",          subject:"Social Science", book:"Geography", classLevel:10, chapterNumber:5 },
   { title:"Manufacturing Industries",              slug:"manufacturing-industries",               subject:"Social Science", book:"Geography", classLevel:10, chapterNumber:6 },
   { title:"Lifelines of National Economy",         slug:"lifelines-of-national-economy",          subject:"Social Science", book:"Geography", classLevel:10, chapterNumber:7 },

@@ -15,8 +15,11 @@ export const useAnalytics = () => {
       setLoading(true);
       try {
         const res = await analyticsService.getPerformance();
-        if (res.message === "no_data") { setNoData(true); }
-        else { setData(res.data); }
+        if (res.message === "no_data" || !res.data || !res.data.subjects?.length) {
+          setNoData(true);
+        } else {
+          setData(res.data);
+        }
       } catch (err) {
         setError("Failed to load analytics.");
       } finally {

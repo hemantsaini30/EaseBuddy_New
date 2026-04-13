@@ -16,7 +16,11 @@ router.get("/performance", protect, async (req, res) => {
       .populate("chapterId", "title subject chapterNumber");
 
     if (!progressRecords.length) {
-      return res.json({ success: true, data: null, message: "no_data" });
+      return res.json({
+        success: true,
+        data: null,
+        message: "no_data",
+      });
     }
 
     // Get all MCQ attempts — pull from progress where mcq section done

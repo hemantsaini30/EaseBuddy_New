@@ -11,6 +11,7 @@ import { resourceService } from "../services/resourceService";
 import { useProgress } from "../hooks/useProgress";
 import BookmarkButton from "../components/common/BookmarkButton";
 import FormulaSheet, { FORMULA_SUBJECTS } from "../components/chapter/FormulaSheet";
+import BackButton from "../components/common/BackButton";
 
 // ── Move getTabs OUTSIDE the component ───────────────────
 // so it doesn't get recreated on every render
@@ -73,6 +74,7 @@ const ChapterDetails = () => {
       chapterTitle={chapter.title}
       subject={chapter.subject}
     >
+       <BackButton className="mb-4" />
       {/* Chapter header */}
       <div className="mb-6">
         <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-indigo-500">

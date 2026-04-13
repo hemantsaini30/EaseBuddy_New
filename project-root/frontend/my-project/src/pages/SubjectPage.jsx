@@ -7,8 +7,8 @@ import { useAuth } from "../context/AuthContext";
 import { useProgress } from "../hooks/useProgress";
 import { SUBJECTS } from "../utils/constants";
 import { MULTI_BOOK_SUBJECTS } from "../data/bookConfig";  // NEW IMPORT
-import BookList from "./BookList";                           // NEW IMPORT
-
+import BookList from "./BookList";        
+import BackButton from "../components/common/BackButton";
 const SubjectPage = () => {
   const { subjectId } = useParams();
   const { user }      = useAuth();
@@ -48,6 +48,7 @@ const SubjectPage = () => {
 
   return (
     <Layout activeSubject={subjectId} chapters={chapters}>
+      <BackButton to="/dashboard" label="Dashboard" className="mb-4" />
       <div className={`mb-8 flex items-center gap-4 rounded-2xl border-2 p-6 ${subject.bgClass} ${subject.borderClass}`}>
         <span className="text-5xl">{subject.icon}</span>
         <div>
