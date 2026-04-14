@@ -5,6 +5,7 @@ import Loader from "../components/common/Loader";
 import { useMistakes } from "../context/MistakeContext";
 import { SUBJECTS } from "../utils/constants";
 import BackButton from "../components/common/BackButton";
+import AIExplainButton from "../components/common/AIExplainButton";
 
 // ── Status config ─────────────────────────────────────────
 const STATUS = {
@@ -199,15 +200,32 @@ const MistakeCard = ({ mistake, onReattempt, onRemove }) => {
 
         {/* Explanation toggle */}
         {mistake.explanation && (
-          <button
-            onClick={() => setExpanded((p) => !p)}
-            className="mb-3 flex items-center gap-1.5 text-xs text-indigo-500 hover:text-indigo-700"
-          >
-            <span>💡</span>
-            <span>{expanded ? "Hide" : "Show"} explanation</span>
-            <span>{expanded ? "▲" : "▼"}</span>
-          </button>
-        )}
+            <>
+              <button
+                onClick={() => setExpanded((p) => !p)}
+                className="mb-3 flex items-center gap-1.5 text-xs text-indigo-500 hover:text-indigo-700"
+              >
+                <span>💡</span>
+                <span>{expanded ? "Hide" : "Show"} explanation</span>
+                <span>{expanded ? "▲" : "▼"}</span>
+              </button>
+
+              {expanded && (
+                <div className="mb-3">
+                  <div className="rounded-xl bg-blue-50 p-3 text-xs leading-relaxed text-blue-800 dark:bg-blue-950 dark:text-blue-200 mb-2">
+                    {mistake.explanation}
+                  </div>
+                  {/* ADD AI Explain button below explanation */}
+                  <AIExplainButton
+                    question={mistake.question}
+                    explanation={mistake.explanation}
+                    subject={mistake.subject}
+                    size="sm"
+                  />
+                </div>
+              )}
+            </>
+          )}
         {expanded && mistake.explanation && (
           <div className="mb-3 rounded-xl bg-blue-50 p-3 text-xs leading-relaxed text-blue-800 dark:bg-blue-950 dark:text-blue-200">
             {mistake.explanation}

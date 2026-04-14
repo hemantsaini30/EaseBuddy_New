@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AIExplainButton from "../common/AIExplainButton";
 
 const DIFFICULTY_COLOR = {
   easy: "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
@@ -9,7 +10,7 @@ const DIFFICULTY_COLOR = {
 /**
  * Collapsible list of Previous Year Questions
  */
-const PYQSection = ({ pyqs = [] }) => {
+const PYQSection = ({ pyqs = [] , subject = "General" }) => {
   const [open, setOpen] = useState(null);
   const [filter, setFilter] = useState("all");
 
@@ -73,7 +74,18 @@ const PYQSection = ({ pyqs = [] }) => {
             </button>
             {open === idx && (
               <div className="border-t border-gray-100 bg-green-50 p-4 dark:border-gray-700 dark:bg-green-950">
-                <p className="mb-1 text-xs font-semibold uppercase text-green-700 dark:text-green-400">Answer</p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-semibold uppercase text-green-700 dark:text-green-400">
+                    Answer
+                  </p>
+                  {/* AI Explain button */}
+                  <AIExplainButton
+                    question={q.question}
+                    answer={q.answer}
+                    subject={subject}   // pass subject prop down (see below)
+                    size="sm"
+                  />
+                </div>
                 <p className="text-sm text-gray-700 dark:text-gray-200">{q.answer}</p>
                 <p className="mt-2 text-xs text-gray-400">
                   {q.marks} mark{q.marks > 1 ? "s" : ""}

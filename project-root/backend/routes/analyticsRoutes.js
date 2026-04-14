@@ -68,7 +68,7 @@ router.get("/performance", protect, async (req, res) => {
       if (record.lastMCQScore !== null && record.lastMCQScore !== undefined) {
         s.mcqAttempted++;
         s.mcqTotalScore += record.lastMCQScore;
-        s.mcqMaxScore += record.lastMCQTotal ?? 20;      // 20 questions per quiz
+        s.mcqMaxScore += record.lastMCQTotal ?? 15;      // 15 questions per quiz
       }
 
       // Per-chapter breakdown

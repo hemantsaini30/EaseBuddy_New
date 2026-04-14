@@ -131,9 +131,10 @@ Rules:
         .filter((m) => !m.loading)
         .map((m) => ({ role: m.role, content: m.content }));
 
-      // Replace the direct Anthropic fetch with this:
+      
             const response = await fetch(
             `${import.meta.env.VITE_API_URL}/ai/doubt`,
+            
             {
                 method: "POST",
                 headers: {

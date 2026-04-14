@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useMistakes } from "../../context/MistakeContext";
 import { useProgress } from "../../hooks/useProgress";
+import AIExplainButton from "../common/AIExplainButton";
 
 const TEST_CONFIG = {
   easy:   { label: "Easy Test",   duration: 30 * 60, questions: 15, color: "green",  icon: "◎" },
@@ -67,7 +68,7 @@ const useTimer = (initialSeconds, onExpire) => {
 };
 
 // ── Result screen with full review ───────────────────────
-const ResultScreen = ({ score, total, level, questions, answers, onRetake, onBack }) => {
+const ResultScreen = ({ score, total, level, questions, answers, onRetake, onBack, subject }) => {
   const cfg = TEST_CONFIG[level];
   const c   = COLOR[cfg.color];
   const pct = Math.round((score / total) * 100);
@@ -243,10 +244,24 @@ const ResultScreen = ({ score, total, level, questions, answers, onRetake, onBac
                     );
                   })}
 
-                  {/* Explanation */}
+                  {/* Explanation + AI button row */}
                   {q.mcqExplanation && (
-                    <div className="mt-2 rounded-xl bg-blue-50 p-3 text-xs leading-relaxed text-blue-800 dark:bg-blue-950 dark:text-blue-200">
-                      💡 {q.mcqExplanation}
+                    <div className="mt-3">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                          Explanation
+                        </p>
+                        {/* ADD AI Explain button */}
+                        <AIExplainButton
+                          question={q.mcqQuestion}
+                          explanation={q.mcqExplanation}
+                          subject={subject}
+                          size="sm"
+                        />
+                      </div>
+                      <div className="rounded-xl bg-blue-50 p-3 text-xs leading-relaxed text-blue-800 dark:bg-blue-950 dark:text-blue-200">
+                        💡 {q.mcqExplanation}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -343,6 +358,7 @@ const QuizScreen = ({ questions, level, onFinish, chapterId, subject, classLevel
         level={level}
         questions={questions}
         answers={finalAnswers}
+        subject={subject}
         onRetake={() => {
           setAnswers({});
           setFinalAnswers({});

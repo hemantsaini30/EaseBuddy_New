@@ -134,7 +134,7 @@ const ChapterDetails = () => {
       <div className="mt-6">
         {activeTab === "video"   && <VideoSection videos={byType("video")} />}
         {activeTab === "ncert"   && <NotesSection resource={byType("ncert")[0]} />}
-        {activeTab === "pyq"     && <PYQSection pyqs={byType("pyq")} />}
+        {activeTab === "pyq"     && <PYQSection pyqs={byType("pyq")} subject={chapter.subject} />}
         {activeTab === "formula" && (
           <FormulaSheet
             chapterId={chapter._id}
