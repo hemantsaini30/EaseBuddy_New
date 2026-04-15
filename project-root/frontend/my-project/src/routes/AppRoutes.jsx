@@ -13,6 +13,7 @@ import BookmarksPage from "../pages/Bookmarks";
 import MistakeBook from "../pages/MistakeBook";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import ResetPassword  from "../pages/auth/ResetPassword";
+import Profile from "../pages/Profile";
 
 const AppRoutes = () => (
   <Routes>
@@ -27,6 +28,7 @@ const AppRoutes = () => (
 
     {/* Protected routes */}
     <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
     <Route path="/subject/:subjectId" element={<ProtectedRoute><SubjectPage /></ProtectedRoute>} />
     <Route path="/subject/:subjectId/book/:bookId" element={<ProtectedRoute><BookChapters /></ProtectedRoute>}/>
     <Route path="/chapter/:slug" element={<ProtectedRoute><ChapterDetails /></ProtectedRoute>} />

@@ -1,65 +1,139 @@
 const asyncHandler = require("express-async-handler");
-const Progress = require("../models/Progress");
-const User = require("../models/User");
+const Progress     = require("../models/Progress");
+const User         = require("../models/User");
+const Activity     = require("../models/Activity");
 
-// ─── GET /api/progress/me ─────────────────────────────────
+// ── GET /api/progress/me ──────────────────────────────────
 const getMyProgress = asyncHandler(async (req, res) => {
-  const progress = await Progress.find({ userId: req.user._id }).populate("chapterId", "title subject");
+  const progress = await Progress.find({ userId: req.user._id })
+    .populate("chapterId", "title subject chapterNumber");
   res.json({ success: true, data: progress });
 });
 
-// ─── PUT /api/progress/mark-section ──────────────────────
-// Body: { chapterId, subject, classLevel, section }
-// section: "video" | "ncert" | "pyq" | "book" | "mcq"
+// ── PUT /api/progress/mark-section ───────────────────────
 const markSectionComplete = asyncHandler(async (req, res) => {
-  const { chapterId, subject, classLevel, section, mcqScore } = req.body;
+  const {
+    chapterId, subject, classLevel,
+    section, mcqScore,
+  } = req.body;
 
   let progress = await Progress.findOne({ userId: req.user._id, chapterId });
 
   if (!progress) {
     progress = await Progress.create({
       userId: req.user._id,
-      chapterId,
-      subject,
-      classLevel,
+      chapterId, subject, classLevel,
     });
   }
 
-  // Mark the section
-  progress.set(`completedSections.${section}`, true);
-  if (section === "mcq" && req.body.mcqScore !== undefined) {
-  progress.lastMCQScore = mcqScore;
-  
+  // If already marked — don't double-count streak
+  const alreadyDone = progress.completedSections[section];
+
+  progress.completedSections[section] = true;
+
+  if (section === "mcq" && mcqScore !== undefined) {
+    progress.lastMCQScore = mcqScore;
   }
 
-  // Check if all 5 sections are done
-  const { video, ncert, pyq, book, mcq } = progress.completedSections;
-  progress.isChapterComplete = [video, ncert, pyq, book, mcq].every(Boolean);
+  const sections = Object.values(progress.completedSections);
+  progress.isChapterComplete = sections.every(Boolean);
 
   await progress.save();
 
-  // Update user streak if chapter just completed
-  if (progress.isChapterComplete) {
-    await updateUserStreak(req.user._id);
+  // ── Log activity ──────────────────────────────────────
+  const now     = new Date();
+  const dateStr = now.toISOString().split("T")[0]; // "2024-01-15"
+
+  // Populate chapter title
+  let chapterTitle = subject || "";
+  try {
+    const Chapter = require("../models/Chapter");
+    const ch = await Chapter.findById(chapterId).select("title");
+    if (ch) chapterTitle = ch.title;
+  } catch (_) {}
+
+  await Activity.create({
+    userId: req.user._id,
+    chapterId,
+    chapterTitle,
+    subject,
+    classLevel,
+    section,
+    dateStr,
+    timestamp: now,
+  });
+
+  // ── Update streak ─────────────────────────────────────
+  const user = await User.findById(req.user._id);
+
+  const todayStr     = dateStr;
+  const yesterday    = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
+  const lastStr      = user.lastActiveDate
+    ? new Date(user.lastActiveDate).toISOString().split("T")[0]
+    : null;
+
+  if (lastStr !== todayStr) {
+    // First activity today
+    if (lastStr === yesterdayStr) {
+      // Consecutive day — extend streak
+      user.streak += 1;
+    } else if (lastStr === null) {
+      // First ever activity
+      user.streak = 1;
+    } else {
+      // Gap > 1 day — reset streak
+      user.streak = 1;
+    }
+    user.lastActiveDate = now;
+  }
+  // else: already active today, streak stays
+
+  // Update longest streak
+  if (user.streak > (user.longestStreak || 0)) {
+    user.longestStreak = user.streak;
   }
 
-  res.json({ success: true, data: progress });
+  // Count total sections done (only new ones)
+  if (!alreadyDone) {
+    user.totalSectionsDone = (user.totalSectionsDone || 0) + 1;
+  }
+
+  await user.save();
+
+  // Mark chapter complete streak bonus
+  if (progress.isChapterComplete) {
+    // Already handled above
+  }
+
+  res.json({ success: true, data: progress, user: {
+    streak:        user.streak,
+    longestStreak: user.longestStreak,
+  }});
 });
 
-// ─── Helper: update streak ────────────────────────────────
-const updateUserStreak = async (userId) => {
-  const user = await User.findById(userId);
-  const today = new Date().toDateString();
-  const lastActive = user.lastActiveDate ? new Date(user.lastActiveDate).toDateString() : null;
+// ── PUT /api/progress/add-time ────────────────────────────
+const addTime = asyncHandler(async (req, res) => {
+  const { chapterId, subject, classLevel, minutes } = req.body;
 
-  if (lastActive !== today) {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const isYesterday = lastActive === yesterday.toDateString();
-    user.streak = isYesterday ? user.streak + 1 : 1;
-    user.lastActiveDate = new Date();
-    await user.save();
+  if (!minutes || minutes < 1) {
+    return res.json({ success: true, message: "No time to save." });
   }
-};
 
-module.exports = { getMyProgress, markSectionComplete };
+  if (chapterId) {
+    const progress = await Progress.findOneAndUpdate(
+      { userId: req.user._id, chapterId },
+      {
+        $inc: { timeSpentMinutes: minutes },
+        $setOnInsert: { subject, classLevel },
+      },
+      { upsert: true, new: true }
+    );
+    return res.json({ success: true, data: progress });
+  }
+
+  res.json({ success: true, message: "Time noted." });
+});
+
+module.exports = { getMyProgress, markSectionComplete, addTime };

@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/errorHandler");
 
+
 // Route imports
 const authRoutes = require("./routes/authRoutes");
 const chapterRoutes = require("./routes/chapterRoutes");
@@ -17,6 +18,7 @@ const analyticsRoutes = require("./routes/analyticsRoutes");
 const bookmarkRoutes = require("./routes/bookmarkRoutes");
 const formulaRoutes = require("./routes/formulaRoutes");
 const mistakeRoutes = require("./routes/mistakeRoutes");
+const activityRoutes = require("./routes/activityRoutes");
 
 
 
@@ -41,6 +43,7 @@ app.use("/api/analytics", analyticsRoutes);
 app.use("/api/bookmarks", bookmarkRoutes);
 app.use("/api/formulas", formulaRoutes);
 app.use("/api/mistakes", mistakeRoutes);
+app.use("/api/activity", activityRoutes);
 
 
 // Health check

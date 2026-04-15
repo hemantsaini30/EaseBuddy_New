@@ -31,6 +31,8 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  
+
   const updateUser = (newData) => {
     setUser((prev) => {
       const next = { ...prev, ...newData };

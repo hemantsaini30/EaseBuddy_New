@@ -34,6 +34,8 @@ const userSchema = new mongoose.Schema(
     },
     school: { type: String, default: "" },
     streak: { type: Number, default: 0 },
+    longestStreak:    { type: Number, default: 0 },
+    totalSectionsDone:{ type: Number, default: 0 },
     bookmarks: [
       {
         chapterId:    { type: mongoose.Schema.Types.ObjectId, ref: "Chapter" },

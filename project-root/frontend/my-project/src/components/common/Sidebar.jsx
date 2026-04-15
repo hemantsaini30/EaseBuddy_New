@@ -3,12 +3,14 @@ import { SUBJECTS } from "../../utils/constants";
 import { useAuth } from "../../context/AuthContext";
 import { useBookmarks } from "../../context/BookmarkContext";
 import { useMistakes } from "../../context/MistakeContext";
+import { useNavigate } from "react-router-dom";
 
 
 const Sidebar = ({ isOpen, onClose, chapters = [], activeSubject = null }) => {
   const { bookmarks } = useBookmarks();
   const { user } = useAuth();
   const { pendingCount } = useMistakes();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -157,12 +159,23 @@ const Sidebar = ({ isOpen, onClose, chapters = [], activeSubject = null }) => {
         </nav>
 
         {/* Footer: streak */}
-        <div className="border-t border-gray-100 p-4 dark:border-gray-800">
-          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-            <span>🔥</span>
-            <span>{user?.streak || 0} day streak</span>
-          </div>
-        </div>
+          <button
+            onClick={() => { navigate("/profile"); onClose(); }}
+            className="flex w-full items-center gap-2 rounded-xl p-2 text-left transition hover:bg-gray-50 dark:hover:bg-gray-800"
+            >
+            <span className="text-lg">🔥</span>
+            <div>
+              <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                {user?.streak || 0} day streak
+              </p>
+              <p className="text-[10px] text-gray-400">View profile →</p>
+            </div>
+            {(user?.streak || 0) >= 7 && (
+              <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-600 dark:bg-amber-900 dark:text-amber-300">
+                🏆
+              </span>
+            )}
+          </button>
       </aside>
     </>
   );
