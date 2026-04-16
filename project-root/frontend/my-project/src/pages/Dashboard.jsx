@@ -7,10 +7,13 @@ import { useProgress } from "../hooks/useProgress";
 import { SUBJECTS, MOTIVATIONAL_TIPS } from "../utils/constants";
 import { getRandomTip } from "../utils/helpers";
 
+
+
 const Dashboard = () => {
   const { user } = useAuth();
   const { getSubjectStats } = useProgress();
   const [tip] = useState(() => getRandomTip(MOTIVATIONAL_TIPS));
+  
 
   return (
     <Layout>
@@ -28,6 +31,7 @@ const Dashboard = () => {
       <div className="mb-8">
         <Streak streak={user?.streak || 0} tip={tip} />
       </div>
+      
 
       {/* Subject cards */}
       <div className="mb-4 flex items-center justify-between">

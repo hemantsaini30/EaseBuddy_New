@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 import DoubtSolver from "./DoubtSolver";
+import StreakToast from "./StreakToast";
 
 /**
  * Main app layout: Navbar (top) + Sidebar (left) + Content (right)
@@ -30,6 +31,7 @@ const Layout = ({ children, activeSubject = null, chapters = [],chapterTitle = n
         <div className="min-h-[calc(100vh-4rem)] p-4 md:p-8">{children}</div>
         <Footer />
       </main>
+      <StreakToast />
 
       <DoubtSolver chapterTitle={chapterTitle} subject={subject} />
     </div>

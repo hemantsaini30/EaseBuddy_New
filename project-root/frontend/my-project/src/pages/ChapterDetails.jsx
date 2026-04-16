@@ -37,6 +37,7 @@ const ChapterDetails = () => {
   const [activeTab, setActiveTab] = useState("video");
   const [loading, setLoading]   = useState(true);
   const { markSection, getChapterProgress } = useProgress();
+  const [done, setDone] = useState(false);
 
   // tabs depends on chapter.subject — recomputes whenever chapter changes
   const tabs = getTabs(chapter?.subject);
@@ -65,7 +66,14 @@ const ChapterDetails = () => {
   const progress = getChapterProgress(chapter._id);
 
   const handleMarkSection = async (section) => {
-    await markSection(chapter._id, chapter.subject, chapter.classLevel, section);
+    setLoading(true);
+    try {
+       await markSection(chapter._id, chapter.subject, chapter.classLevel, section);
+       setDone(true);
+    } finally {
+      setLoading(false);
+    }
+    
   };
 
   return (

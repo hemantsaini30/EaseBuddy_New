@@ -49,6 +49,6 @@ export const resourceService = {
       section,
        ...(mcqScore !== undefined && { mcqScore }),
     });
-    return data.data;
+    return data;
   },
 };
