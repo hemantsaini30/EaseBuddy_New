@@ -1,11 +1,28 @@
-const mongoose = require("mongoose");
-const dotenv   = require("dotenv");
-const Chapter  = require("./models/Chapter");
-const Resource = require("./models/Resource");
-const Formula  = require("./models/Formula");
+const dotenv = require("dotenv");
+dotenv.config({ path: "../.env" });
 
-dotenv.config();
+const mongoose  = require("mongoose");
+const Chapter   = require("../models/Chapter");
+const Resource  = require("../models/Resource");
+const Formula   = require("../models/Formula");
 
+const chapters = [
+  // ── SCIENCE ──────────────────────────────────────────────────────────────
+  { title:"Chemical Reactions and Equations",    slug:"chemical-reactions-and-equations",    subject:"Science", classLevel:10, chapterNumber:1,  description:"Balancing equations, types of chemical reactions, oxidation-reduction.", tags:["chemical reactions","balancing equations","redox"] },
+  { title:"Acids, Bases and Salts",              slug:"acids-bases-and-salts",               subject:"Science", classLevel:10, chapterNumber:2,  description:"pH scale, indicators, neutralization, common salts.", tags:["acids","bases","salts","pH"] },
+  { title:"Metals and Non-metals",               slug:"metals-and-non-metals",               subject:"Science", classLevel:10, chapterNumber:3,  description:"Properties, reactivity series, extraction, corrosion.", tags:["metals","reactivity series","extraction"] },
+  { title:"Carbon and its Compounds",            slug:"carbon-and-its-compounds",            subject:"Science", classLevel:10, chapterNumber:4,  description:"Covalent bonding, hydrocarbons, functional groups, ethanol, ethanoic acid.", tags:["carbon","organic chemistry","hydrocarbons"] },
+  { title:"Periodic Classification of Elements", slug:"periodic-classification-of-elements", subject:"Science", classLevel:10, chapterNumber:5,  description:"Dobereiner's triads, Newlands' octaves, Mendeleev's and Modern Periodic Table.", tags:["periodic table","Mendeleev","atomic number"] },
+  { title:"Life Processes",                      slug:"life-processes",                      subject:"Science", classLevel:10, chapterNumber:6,  description:"Nutrition, respiration, transportation, excretion.", tags:["nutrition","respiration","transportation","excretion"] },
+  { title:"Control and Coordination",            slug:"control-and-coordination",            subject:"Science", classLevel:10, chapterNumber:7,  description:"Nervous system, hormones, plant movements, endocrine system.", tags:["nervous system","hormones","reflex action"] },
+  { title:"How do Organisms Reproduce?",         slug:"how-do-organisms-reproduce",          subject:"Science", classLevel:10, chapterNumber:8,  description:"Asexual and sexual reproduction, human reproductive system.", tags:["reproduction","asexual","sexual","DNA"] },
+  { title:"Heredity",                            slug:"heredity",                            subject:"Science", classLevel:10, chapterNumber:9,  description:"Mendel's experiments, heredity and evolution, sex determination.", tags:["heredity","Mendel","genetics","evolution"] },
+  { title:"Light - Reflection and Refraction",   slug:"light-reflection-and-refraction",     subject:"Science", classLevel:10, chapterNumber:10, description:"Laws of reflection, mirrors, lenses, refraction, power of lens.", tags:["light","reflection","refraction","mirrors","lenses"] },
+  { title:"Human Eye and Colourful World",       slug:"human-eye-and-colourful-world",       subject:"Science", classLevel:10, chapterNumber:11, description:"Human eye, defects of vision, refraction through prism, dispersion.", tags:["human eye","myopia","hypermetropia","prism"] },
+  { title:"Electricity",                         slug:"electricity",                         subject:"Science", classLevel:10, chapterNumber:12, description:"Ohm's law, resistance, circuits, electric power, heating effect.", tags:["Ohm's law","resistance","electric power","circuits"] },
+  { title:"Magnetic Effects of Electric Current",slug:"magnetic-effects-of-electric-current",subject:"Science", classLevel:10, chapterNumber:13, description:"Magnetic field, Fleming's rules, electric motor, generator, AC/DC.", tags:["magnetic field","Fleming's rule","electric motor","generator"] },
+  { title:"Our Environment",                     slug:"our-environment",                     subject:"Science", classLevel:10, chapterNumber:14, description:"Ecosystem, food chains, ozone layer, waste management.", tags:["ecosystem","food chain","ozone","environment"] },
+];
 
 const buildResources = (chapterMap) => {
   const resources = [];
@@ -3844,7 +3861,7 @@ const seedDatabase = async () => {
     console.log("✅ Connected to MongoDB");
 
     // Clear existing data
-    await Chapter.deleteMany({});
+    
     await Resource.deleteMany({});
     console.log("🗑️  Cleared existing chapters and resources");
 
