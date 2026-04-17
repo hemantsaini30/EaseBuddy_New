@@ -38,7 +38,7 @@ export const useProgress = () => {
   mcqTotal
 ) => {
   try {
-    const updated = await resourceService.markSectionComplete(
+    const response = await resourceService.markSectionComplete(
       chapterId,
       subject,
       classLevel,
@@ -47,22 +47,28 @@ export const useProgress = () => {
       mcqTotal
     );
 
-    // ✅ Update progress (same as before)
+    // Extract the actual progress object and user stats from the response
+    const progressData = response.data;
+    const userStats = response.user;
+
+    // ✅ Update progress array precisely
     setProgress((prev) => {
       const idx = prev.findIndex((p) => sameChapter(p, chapterId));
-      if (idx === -1) return [...prev, updated];
+      if (idx === -1) return [...prev, progressData];
       return prev.map((p) =>
-        sameChapter(p, chapterId) ? updated : p
+        sameChapter(p, chapterId) ? progressData : p
       );
     });
 
-    // ✅ SAFE streak update (no crash)
-  if (updated?.user) {
-  updateUser({
-    streak: updated.user.streak,
-    longestStreak: updated.user.longestStreak,
-  });
-}
+    // ✅ SAFE streak update
+    if (userStats) {
+      updateUser({
+        streak: userStats.streak,
+        longestStreak: userStats.longestStreak,
+      });
+    }
+
+    return progressData;
 
     return updated;
   } catch (err) {
