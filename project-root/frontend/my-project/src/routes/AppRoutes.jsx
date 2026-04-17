@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "../components/common/ProtectedRoute";
+import PublicRoute from "../components/common/PublicRoute";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import Dashboard from "../pages/Dashboard";
@@ -18,10 +19,10 @@ import Profile from "../pages/Profile";
 const AppRoutes = () => (
   <Routes>
     {/* Public routes */}
-    <Route path="/login" element={<Login />} />
-    <Route path="/register" element={<Register />} />
-    <Route path="/forgot-password" element={<ForgotPassword />} />
-    <Route path="/reset-password/:token" element={<ResetPassword />} />
+    <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+    <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+    <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+    <Route path="/reset-password/:token" element={<PublicRoute><ResetPassword /></PublicRoute>} />
 
     {/* Redirect root to dashboard */}
     <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -34,7 +35,7 @@ const AppRoutes = () => (
     <Route path="/chapter/:slug" element={<ProtectedRoute><ChapterDetails /></ProtectedRoute>} />
 
     <Route path="/mock-test" element={<ProtectedRoute><MockTest /></ProtectedRoute>} />
-    <Route path="/performance" element={<PerformanceDashboard />} />
+    <Route path="/performance" element={<ProtectedRoute><PerformanceDashboard /></ProtectedRoute>} />
     <Route path="/bookmarks" element={<ProtectedRoute><BookmarksPage /></ProtectedRoute>}/>
     <Route path="/mistakes" element={<ProtectedRoute><MistakeBook /></ProtectedRoute>}/>
 
