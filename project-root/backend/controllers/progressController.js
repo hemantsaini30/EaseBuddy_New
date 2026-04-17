@@ -87,6 +87,10 @@ const getMyProgress = asyncHandler(async (req, res) => {
         user.streak = 1;
       }
       user.lastActiveDate = now;
+    } else if (user.streak === 0) {
+      // Account created today (so lastActiveDate is today), but they haven't earned their first streak point yet
+      user.streak = 1;
+      user.lastActiveDate = now;
     }
     // else: already active today, streak stays
 
