@@ -1,28 +1,74 @@
-const express = require("express");
-const router = express.Router();
+const express    = require("express");
+const router     = express.Router();
 const { protect } = require("../middlewares/authMiddleware");
-const Resource = require("../models/Resource");
-const Chapter = require("../models/Chapter");
+const Resource   = require("../models/Resource");
+const Chapter    = require("../models/Chapter");
+const mongoose   = require("mongoose");
 
 // POST /api/mock-test/generate
-// Body: { subject, classLevel, totalQuestions, difficulty }
-// difficulty: "easy" | "medium" | "hard" | "mixed"
+// Body: {
+//   subject?        — old single-subject mode (still works)
+//   chapterIds?     — new: array of specific chapter _id strings
+//   classLevel,
+//   totalQuestions,
+//   difficulty: "easy" | "medium" | "hard" | "mixed"
+// }
 router.post("/generate", protect, async (req, res) => {
   try {
-    const { subject, classLevel, totalQuestions = 30, difficulty = "mixed" } = req.body;
+    const {
+      subject,
+      chapterIds,
+      classLevel,
+      totalQuestions = 30,
+      difficulty     = "mixed",
+    } = req.body;
 
-    // Find all chapter IDs for this subject + class
-    const chapters = await Chapter.find({ subject, classLevel, isActive: true });
-    const chapterIds = chapters.map((c) => c._id);
+    // ── 1. Resolve chapters ───────────────────────────────
+    let chapters = [];
 
-    if (!chapterIds.length) {
-      return res.status(404).json({ success: false, message: "No chapters found for this subject and class." });
+    // ── 1. Resolve chapters ───────────────────────────────
+if (chapterIds && chapterIds.length > 0) {
+  chapters = await Chapter.find({
+    _id: { $in: chapterIds.map(id => new mongoose.Types.ObjectId(id)) },
+    isActive: { $ne: false },   // ← was: isActive: true
+  });
+} else if (subject) {
+  chapters = await Chapter.find({
+    subject, classLevel,
+    isActive: { $ne: false },   // ← was: isActive: true
+  });
+} else {
+  chapters = await Chapter.find({
+    classLevel,
+    isActive: { $ne: false },   // ← was: isActive: true
+  });
+}
+
+
+
+    if (!chapters.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No chapters found for your selection.",
+      });
     }
 
-    // Build query filter
-    const filter = { type: "mcq", chapterId: { $in: chapterIds }, isActive: true };
+    // Build chapterMap for enrichment later
+    const chapterMap = {};
+    chapters.forEach((c) => {
+      chapterMap[c._id.toString()] = c;
+    });
 
-    // For mixed: pull equal parts easy/medium/hard
+    const resolvedChapterIds = chapters.map((c) => c._id);
+
+    // ── 2. Build base filter ──────────────────────────────
+const filter = {
+  type:      "mcq",
+  chapterId: { $in: resolvedChapterIds },
+  isActive:  { $ne: false },    // ← was: isActive: true
+};
+
+    // ── 3. Sample questions ───────────────────────────────
     let questions = [];
 
     if (difficulty === "mixed") {
@@ -31,7 +77,7 @@ router.post("/generate", protect, async (req, res) => {
 
       const [easy, medium, hard] = await Promise.all([
         Resource.aggregate([
-          { $match: { ...filter, testLevel: "easy" } },
+          { $match: { ...filter, testLevel: "easy"   } },
           { $sample: { size: perLevel + (remainder > 0 ? 1 : 0) } },
         ]),
         Resource.aggregate([
@@ -39,12 +85,12 @@ router.post("/generate", protect, async (req, res) => {
           { $sample: { size: perLevel + (remainder > 1 ? 1 : 0) } },
         ]),
         Resource.aggregate([
-          { $match: { ...filter, testLevel: "hard" } },
+          { $match: { ...filter, testLevel: "hard"   } },
           { $sample: { size: perLevel } },
         ]),
       ]);
 
-      // Shuffle the combined array
+      // Shuffle combined array
       questions = [...easy, ...medium, ...hard].sort(() => Math.random() - 0.5);
     } else {
       questions = await Resource.aggregate([
@@ -54,41 +100,57 @@ router.post("/generate", protect, async (req, res) => {
     }
 
     if (!questions.length) {
-      return res.status(404).json({ success: false, message: "Not enough questions in the bank yet. Add more MCQs first." });
+      return res.status(404).json({
+        success: false,
+        message: "Not enough questions found. Try selecting more chapters or a different difficulty.",
+      });
     }
 
-    // Attach chapter title to each question
-    const chapterMap = {};
-    chapters.forEach((c) => { chapterMap[c._id.toString()] = c.title; });
+    // ── 4. Enrich with chapter metadata ───────────────────
+    const enriched = questions.map((q) => {
+      const ch = chapterMap[q.chapterId?.toString()];
+      return {
+        // Keep all original Resource fields (mcqQuestion, mcqOptions, etc.)
+        ...q,
+        // Convenience aliases used by QuizScreen
+        mcqQuestion:     q.mcqQuestion,
+        mcqOptions:      q.mcqOptions,
+        mcqCorrectIndex: q.mcqCorrectIndex,
+        mcqExplanation:  q.mcqExplanation,
+        testLevel:       q.testLevel,
+        // Chapter metadata
+        chapterId:    q.chapterId,
+        chapterTitle: ch?.title      || "Unknown Chapter",
+        subject:      ch?.subject    || subject || "",
+        classLevel:   ch?.classLevel || classLevel,
+        // Marks: hard = 2, others = 1
+        marks: q.testLevel === "hard" ? 2 : 1,
+      };
+    });
 
-    const enriched = questions.map((q) => ({
-      _id: q._id,
-      question: q.mcqQuestion,
-      options: q.mcqOptions,
-      correctIndex: q.mcqCorrectIndex,
-      explanation: q.mcqExplanation,
-      difficulty: q.testLevel,
-      chapterTitle: chapterMap[q.chapterId?.toString()] || "Unknown Chapter",
-      marks: q.testLevel === "hard" ? 2 : 1, // hard = 2 marks, others = 1 mark
-    }));
+    // ── 5. Stats for response ─────────────────────────────
+    const totalMarks      = enriched.reduce((sum, q) => sum + q.marks, 0);
+    const durationMinutes = Math.round(totalQuestions * 1.5);
 
-    // Calculate total marks and suggested duration
-    const totalMarks = enriched.reduce((sum, q) => sum + q.marks, 0);
-    const durationMinutes = Math.round(totalQuestions * 1.5); // 1.5 min per question
+    // Subjects covered (useful when multi-subject selection)
+    const subjectsCovered = [...new Set(enriched.map(q => q.subject).filter(Boolean))];
 
     res.json({
       success: true,
-      data: {
-        subject,
+      data: enriched,          // frontend reads data as flat array of questions
+      meta: {
+        subject:          subject || null,
+        subjectsCovered,
         classLevel,
         difficulty,
-        questions: enriched,
-        totalQuestions: enriched.length,
+        totalQuestions:   enriched.length,
         totalMarks,
         durationMinutes,
-        generatedAt: new Date().toISOString(),
+        chaptersUsed:     chapters.length,
+        generatedAt:      new Date().toISOString(),
       },
     });
+
   } catch (error) {
     console.error("Mock test generation error:", error);
     res.status(500).json({ success: false, message: error.message });
