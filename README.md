@@ -66,7 +66,7 @@ EaseBuddy is a full-stack MERN EdTech platform built specifically for **CBSE Cla
 
 ## 🚀 Live Demo
 
-**[https://easebuddy.vercel.app](https://easebuddy.vercel.app)**
+**[https://easebuddy.vercel.app](https://easebuddynew.vercel.app)**
 
 > Create a free account to explore all features. No payment, no ads, ever.
 
