@@ -132,7 +132,7 @@ EaseBuddy is a full-stack MERN EdTech platform built specifically for **CBSE Cla
 ### AI & External APIs
 | Service | Usage |
 |---|---|
-| Anthropic Claude | AI Doubt Solver (direct browser API call) |
+| Groq (LLaMA 3) | AI Doubt Solver (direct browser API call) |
 | Groq (LLaMA 3) | AI Easy Explain modal |
 | YouTube Embed | Video lessons |
 | Google Drive Embed | NCERT PDFs |
