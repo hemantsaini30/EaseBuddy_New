@@ -16,7 +16,7 @@ Videos · NCERT PDFs · PYQs · MCQ Quizzes · AI Explanations · Streak Trackin
 
 <br />
 
-[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-easebuddy.vercel.app-6366F1?style=for-the-badge)](https://easebuddy.vercel.app)
+[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-easebuddynew.vercel.app-6366F1?style=for-the-badge)](https://easebuddy.vercel.app)
 [![GitHub](https://img.shields.io/badge/GitHub-hemantsaini30-181717?style=for-the-badge&logo=github)](https://github.com/hemantsaini30)
 
 <br />
